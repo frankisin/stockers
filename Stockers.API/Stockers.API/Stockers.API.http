@@ -1,0 +1,6 @@
+@Stockers.API_HostAddress = http://localhost:5056
+
+GET {{Stockers.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
