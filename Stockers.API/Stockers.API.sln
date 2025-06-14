@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36127.28 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stockers.API", "Stockers.API\Stockers.API.csproj", "{689130D2-7433-4235-B358-CBA8F75BFB36}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{689130D2-7433-4235-B358-CBA8F75BFB36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{689130D2-7433-4235-B358-CBA8F75BFB36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{689130D2-7433-4235-B358-CBA8F75BFB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{689130D2-7433-4235-B358-CBA8F75BFB36}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F2081C1-119C-4B58-80DA-E00A8747992D}
+	EndGlobalSection
+EndGlobal
