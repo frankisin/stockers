@@ -1,3 +1,4 @@
-<a>
+function Home(){
     
-</a>
+}
+export default Home

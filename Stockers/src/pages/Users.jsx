@@ -1,3 +1,4 @@
-<a>
-    
-</a>
+function Users(){
+
+}
+export default Users
