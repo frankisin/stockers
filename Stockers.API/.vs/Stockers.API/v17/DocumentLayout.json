@@ -7,12 +7,12 @@
       "RelativeMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|solutionrelative:stockers.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|e:\\projects\\stockers\\stockers.api\\stockers.api\\data\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|solutionrelative:stockers.api\\data\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|e:\\projects\\stockers\\stockers.api\\stockers.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|solutionrelative:stockers.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|e:\\projects\\stockers\\stockers.api\\stockers.api\\data\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{689130D2-7433-4235-B358-CBA8F75BFB36}|Stockers.API\\Stockers.API.csproj|solutionrelative:stockers.api\\data\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +30,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "DataContext.cs",
               "DocumentMoniker": "E:\\Projects\\Stockers\\Stockers.API\\Stockers.API\\Data\\DataContext.cs",
               "RelativeDocumentMoniker": "Stockers.API\\Data\\DataContext.cs",
@@ -38,8 +38,7 @@
               "RelativeToolTip": "Stockers.API\\Data\\DataContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-14T00:33:16.384Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-14T00:33:16.384Z"
             },
             {
               "$type": "Document",
@@ -49,7 +48,7 @@
               "RelativeDocumentMoniker": "Stockers.API\\Program.cs",
               "ToolTip": "E:\\Projects\\Stockers\\Stockers.API\\Stockers.API\\Program.cs",
               "RelativeToolTip": "Stockers.API\\Program.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAswA4AAAArAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAswBoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-14T00:31:41.692Z",
               "EditorCaption": ""
@@ -60,7 +59,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "appsettings.json",
               "DocumentMoniker": "E:\\Projects\\Stockers\\Stockers.API\\Stockers.API\\appsettings.json",
               "RelativeDocumentMoniker": "Stockers.API\\appsettings.json",
