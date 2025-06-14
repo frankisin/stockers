@@ -13,7 +13,7 @@ namespace lostborn_backend.Models
         public int UserID { get; set; }
 
         [JsonIgnore]
-        public Users User { get; set; }
+        public User User { get; set; }
 
         // Collection of items in the cart
         public List<CartItem> CartItems { get; set; }

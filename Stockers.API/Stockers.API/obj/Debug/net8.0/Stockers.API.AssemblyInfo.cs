@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stockers.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cba165127170deceac46c9d6353a4de0dfd51900")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ec833a306ad2ba39f08492d5b87dcf97fc5c33a")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stockers.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stockers.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

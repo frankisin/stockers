@@ -11,6 +11,8 @@ namespace lostborn_backend.Helpers
 		{
 
 		}
+        public DbSet<User> Users { get; set; }
+
         internal Task SaveChangesAsync(JsonSerializerOptions options)
         {
             throw new NotImplementedException();

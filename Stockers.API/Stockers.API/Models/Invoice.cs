@@ -15,7 +15,7 @@ namespace lostborn_backend.Models
         public int UserID { get; set; } // Foreign key to the user
 
         [ForeignKey("UserID")]
-        public Users User { get; set; } // Navigation property for the user
+        public User User { get; set; } // Navigation property for the user
 
         [Required]
         public DateTime InvoiceDate { get; set; } // Date of invoice generation
