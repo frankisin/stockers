@@ -3,19 +3,23 @@ import './Navbar.css'
 
 function Navbar() {
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <div className="navbar-brand">
-          <Link to="/" className="brand">Stockers</Link>
-        </div>
-        <ul className="navbar-links">
-          <li><NavLink to="/" className="nav-link">Home</NavLink></li>
-          <li><NavLink to="/users" className="nav-link">Users</NavLink></li>
-          <li><NavLink to="/login" className="nav-link">Login</NavLink></li>
-        </ul>
-      </div>
-    </nav>
-  )
+            <div>
+                <header>
+                    <nav className="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+                        <div className="container px-5">
+                            <a className="navbar-brand" href="/home">Stockers</a>
+                            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span className="navbar-toggler-icon"></span></button>
+                            <div className="collapse navbar-collapse" id="navbarResponsive">
+                                <ul className="navbar-nav ms-auto">
+                                    <li className="nav-item"><a className="nav-link" href="/register">Register</a></li>
+                                    <li className="nav-item"><a className="nav-link" href="/login">Log In</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            </div>
+        );
 }
 
 export default Navbar

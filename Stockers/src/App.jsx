@@ -12,15 +12,13 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    
     <div className="app">
-     <Navbar />
+     <Navbar/>
       <main>
-      
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/home" element={<Home/>} />
+          <Route path="/users" element={<Users/>} />
+          <Route path="/login" element={<Login/>} />
         </Routes>
       </main>
     </div>
