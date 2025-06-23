@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
-namespace lostborn_backend.Controllers
+namespace Stockers.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
