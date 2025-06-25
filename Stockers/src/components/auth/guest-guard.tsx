@@ -24,12 +24,13 @@ const GuestGuard = ({ children }: GuestGuardProps): React.JSX.Element | null => 
         return;
       }
 
+      /*
       if (user) {
         logger.debug('[GuestGuard]: User is logged in, redirecting to dashboard');
         navigate(paths.dashboard.overview, { replace: true });
         return;
       }
-
+      */
       setIsChecking(false);
     };
 
