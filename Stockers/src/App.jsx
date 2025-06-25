@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
 
-import { createTheme } from './styles/theme/create-theme'; // ✅ confirm this path
+import { createTheme } from './styles/theme/create-theme'; 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Users from './pages/Users';
@@ -10,7 +10,7 @@ import LoginPage from './app/auth/sign-in/page';
 import RegisterPageComponent from './pages/RegisterPageComponent';
 
 import './App.css'; // Keep your app-specific styles
-import './styles/global.css'; // ✅ Make sure this is present too
+import './styles/global.css'; 
 
 const theme = createTheme(); // Use Devias MUI theme generator
 
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline /> {/* ✅ Reset CSS across all browsers */}
+      <CssBaseline /> {}
 
       <div className="app">
         <Navbar />

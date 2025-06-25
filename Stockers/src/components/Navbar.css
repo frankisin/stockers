@@ -1,5 +1,3 @@
-/* src/components/Navbar.css */
-@import '../App.css'; /* Optional if using CSS Modules or global import in main.jsx */
 
 /* Wraps all navbar content inside the bar */
 .navbar-container {
@@ -9,4 +7,47 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+/* Keep Navbar on top and full-width */
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  width: 100%;
+  background-color: #121212;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+/* Navbar brand */
+.navbar-brand .brand {
+  font-size: 1.5rem;
+  color: #b8ff67;
+  text-decoration: none;
+}
+
+/* Navbar links */
+.navbar-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-links .nav-link {
+  color: #ddd;
+  text-decoration: none;
+}
+
+.navbar-links .nav-link:hover,
+.navbar-links .nav-link.active {
+  color: #ffffff;
+  border-bottom: 2px solid #ffffff;
 }

@@ -12,7 +12,7 @@ function customCreateTheme(): Theme {
     colorSchemes,
     components,
     cssVariables: {
-			colorSchemeSelector: "class",
+			colorSchemeSelector: "light",
 		},
     direction: "ltr",
     shadows,

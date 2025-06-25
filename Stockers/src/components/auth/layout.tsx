@@ -18,7 +18,7 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
         display: { xs: 'flex', lg: 'grid' },
         flexDirection: 'column',
         gridTemplateColumns: '1fr 1fr',
-        minHeight: '100%',
+        minHeight: '100vh',
       }}
     >
       {/* Left Side: Form Panel */}
