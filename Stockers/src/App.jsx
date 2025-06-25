@@ -1,31 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Home from './pages/Home'
-import Users from './pages/Users'
-import LoginPageComponent from './pages/LoginPageComponent'
-import RegisterPageComponent from './pages/RegisterPageComponent'
-import './App.css'
+import { useState } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+
+import { createTheme } from './styles/theme/create-theme'; // ✅ confirm this path
+import Navbar from './components/Navbar';
+import Home from './pages/Home';
+import Users from './pages/Users';
+import LoginPage from './app/auth/sign-in/page';
+import RegisterPageComponent from './pages/RegisterPageComponent';
+
+import './App.css'; // Keep your app-specific styles
+import './styles/global.css'; // ✅ Make sure this is present too
+
+const theme = createTheme(); // Use Devias MUI theme generator
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   return (
-    <div className="app">
-     <Navbar/>
-      <main>
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/login" element={<LoginPageComponent />} />
-          <Route path="/register" element={<RegisterPageComponent />} />
-        </Routes>
-      </main>
-    </div>
-  )
+    <ThemeProvider theme={theme}>
+      <CssBaseline /> {/* ✅ Reset CSS across all browsers */}
+
+      <div className="app">
+        <Navbar />
+
+        <main>
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/home" element={<Home />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPageComponent />} />
+          </Routes>
+        </main>
+      </div>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
