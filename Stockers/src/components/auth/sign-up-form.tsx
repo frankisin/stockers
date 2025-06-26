@@ -1,8 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import RouterLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
@@ -32,13 +31,17 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { firstName: '', lastName: '', email: '', password: '', terms: false } satisfies Values;
+const defaultValues: Values = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  password: '',
+  terms: false,
+};
 
 export function SignUpForm(): React.JSX.Element {
-  const router = useRouter();
-
+  const navigate = useNavigate();
   const { checkSession } = useUser();
-
   const [isPending, setIsPending] = React.useState<boolean>(false);
 
   const {
@@ -46,7 +49,10 @@ export function SignUpForm(): React.JSX.Element {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
+  } = useForm<Values>({
+    defaultValues,
+    resolver: zodResolver(schema),
+  });
 
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
@@ -60,14 +66,10 @@ export function SignUpForm(): React.JSX.Element {
         return;
       }
 
-      // Refresh the auth state
       await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
+      navigate(paths.dashboard.overview); // Redirect after signup
     },
-    [checkSession, router, setError]
+    [checkSession, navigate, setError]
   );
 
   return (
@@ -76,11 +78,12 @@ export function SignUpForm(): React.JSX.Element {
         <Typography variant="h4">Sign up</Typography>
         <Typography color="text.secondary" variant="body2">
           Already have an account?{' '}
-          <Link component={RouterLink} href={paths.auth.signIn} underline="hover" variant="subtitle2">
+          <Link component={RouterLink} to={paths.auth.signIn} underline="hover" variant="subtitle2">
             Sign in
           </Link>
         </Typography>
       </Stack>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Controller
@@ -90,7 +93,7 @@ export function SignUpForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.firstName)}>
                 <InputLabel>First name</InputLabel>
                 <OutlinedInput {...field} label="First name" />
-                {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
+                {errors.firstName && <FormHelperText>{errors.firstName.message}</FormHelperText>}
               </FormControl>
             )}
           />
@@ -98,10 +101,10 @@ export function SignUpForm(): React.JSX.Element {
             control={control}
             name="lastName"
             render={({ field }) => (
-              <FormControl error={Boolean(errors.firstName)}>
+              <FormControl error={Boolean(errors.lastName)}>
                 <InputLabel>Last name</InputLabel>
                 <OutlinedInput {...field} label="Last name" />
-                {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
+                {errors.lastName && <FormHelperText>{errors.lastName.message}</FormHelperText>}
               </FormControl>
             )}
           />
@@ -112,7 +115,7 @@ export function SignUpForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.email)}>
                 <InputLabel>Email address</InputLabel>
                 <OutlinedInput {...field} label="Email address" type="email" />
-                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                {errors.email && <FormHelperText>{errors.email.message}</FormHelperText>}
               </FormControl>
             )}
           />
@@ -123,7 +126,7 @@ export function SignUpForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.password)}>
                 <InputLabel>Password</InputLabel>
                 <OutlinedInput {...field} label="Password" type="password" />
-                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                {errors.password && <FormHelperText>{errors.password.message}</FormHelperText>}
               </FormControl>
             )}
           />
@@ -135,21 +138,25 @@ export function SignUpForm(): React.JSX.Element {
                 <FormControlLabel
                   control={<Checkbox {...field} />}
                   label={
-                    <React.Fragment>
-                      I have read the <Link>terms and conditions</Link>
-                    </React.Fragment>
+                    <>
+                      I have read the{' '}
+                      <Link href="#" underline="hover">
+                        terms and conditions
+                      </Link>
+                    </>
                   }
                 />
-                {errors.terms ? <FormHelperText error>{errors.terms.message}</FormHelperText> : null}
+                {errors.terms && <FormHelperText error>{errors.terms.message}</FormHelperText>}
               </div>
             )}
           />
-          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+          {errors.root && <Alert color="error">{errors.root.message}</Alert>}
           <Button disabled={isPending} type="submit" variant="contained">
             Sign up
           </Button>
         </Stack>
       </form>
+
       <Alert color="warning">Created users are not persisted</Alert>
     </Stack>
   );

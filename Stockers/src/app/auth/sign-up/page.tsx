@@ -8,7 +8,7 @@ import {SignUpForm} from '../../../components/auth/sign-up-form';
 
 export const metadata = { title: `Sign up | Auth | ${config.site.name}` } satisfies Metadata;
 
-export default function Page(): React.JSX.Element {
+export default function Register(): React.JSX.Element {
   return (
     <Layout>
       <GuestGuard>
