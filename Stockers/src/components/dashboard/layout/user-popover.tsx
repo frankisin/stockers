@@ -1,6 +1,5 @@
 import * as React from 'react';
-import RouterLink from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -25,8 +24,7 @@ export interface UserPopoverProps {
 
 export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): React.JSX.Element {
   const { checkSession } = useUser();
-
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const handleSignOut = React.useCallback(async (): Promise<void> => {
     try {
@@ -37,16 +35,19 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
         return;
       }
 
-      // Refresh the auth state
       await checkSession?.();
 
-      // UserProvider, for this case, will not refresh the router and we need to do it manually
-      router.refresh();
-      // After refresh, AuthGuard will handle the redirect
+      // Redirect to login (or force re-auth check)
+      navigate(paths.auth.signIn, { replace: true });
     } catch (error) {
       logger.error('Sign out error', error);
     }
-  }, [checkSession, router]);
+  }, [checkSession, navigate]);
+
+  const handleNavigate = (path: string) => {
+    onClose();
+    navigate(path);
+  };
 
   return (
     <Popover
@@ -64,13 +65,13 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
       </Box>
       <Divider />
       <MenuList disablePadding sx={{ p: '8px', '& .MuiMenuItem-root': { borderRadius: 1 } }}>
-        <MenuItem component={RouterLink} href={paths.dashboard.settings} onClick={onClose}>
+        <MenuItem onClick={() => handleNavigate(paths.dashboard.settings)}>
           <ListItemIcon>
             <GearSixIcon fontSize="var(--icon-fontSize-md)" />
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem component={RouterLink} href={paths.dashboard.account} onClick={onClose}>
+        <MenuItem onClick={() => handleNavigate(paths.dashboard.account)}>
           <ListItemIcon>
             <UserIcon fontSize="var(--icon-fontSize-md)" />
           </ListItemIcon>

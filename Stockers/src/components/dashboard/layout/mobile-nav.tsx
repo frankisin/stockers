@@ -1,8 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import RouterLink from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link as RouterLink } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
@@ -12,10 +13,10 @@ import Typography from '@mui/material/Typography';
 import { ArrowSquareUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowSquareUpRight';
 import { CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/CaretUpDown';
 
-import type { NavItemConfig } from '@/types/nav';
-import { paths } from '@/paths';
-import { isNavItemActive } from '@/lib/is-nav-item-active';
-import { Logo } from '@/components/core/logo';
+import type { NavItemConfig } from '../../../types/nav';
+import { paths } from '../../../paths';
+import { isNavItemActive } from '../../../lib/is-nav-item-active';
+import { Logo } from '../../../components/core/logo';
 
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
@@ -27,7 +28,7 @@ export interface MobileNavProps {
 }
 
 export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element {
-  const pathname = usePathname();
+  const pathname = useLocation();
 
   return (
     <Drawer
@@ -58,7 +59,7 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
       open={open}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Box component={RouterLink} href={paths.home} sx={{ display: 'inline-flex' }}>
+        <Box component={RouterLink} sx={{ display: 'inline-flex' }} to={"/home"}>
           <Logo color="light" height={32} width={122} />
         </Box>
         <Box
@@ -84,8 +85,8 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
         </Box>
       </Stack>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
-      <Box component="nav" sx={{ flex: '1 1 auto', p: '12px' }}>
-        {renderNavItems({ pathname, items: navItems })}
+      <Box component="nav">
+          {renderNavItems({ pathname: location.pathname, items: navItems })}
       </Box>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Stack spacing={2} sx={{ p: '12px' }}>

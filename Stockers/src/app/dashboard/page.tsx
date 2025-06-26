@@ -1,7 +1,7 @@
 import * as React from 'react';
-import type { Metadata } from 'next';
 import Grid from '@mui/material/Grid';
 import dayjs from 'dayjs';
+import Layout from './layout';
 
 import { config } from '../../config';
 import { Budget } from '../../components/dashboard/overview/budget';
@@ -13,11 +13,10 @@ import { TotalCustomers } from '../../components/dashboard/overview/total-custom
 import { TotalProfit } from '../../components/dashboard/overview/total-profit';
 import { Traffic } from '../../components/dashboard/overview/traffic';
 
-export const metadata = { title: `Overview | Dashboard | ${config.site.name}` } satisfies Metadata;
-
-export default function Page(): React.JSX.Element {
+export default function Dashboard(): React.JSX.Element {
   return (
-    <Grid container spacing={3}>
+    <Layout>
+          <Grid container spacing={3}>
       <Grid
         size={{
           lg: 3,
@@ -176,5 +175,7 @@ export default function Page(): React.JSX.Element {
         />
       </Grid>
     </Grid>
+    </Layout>
+
   );
 }

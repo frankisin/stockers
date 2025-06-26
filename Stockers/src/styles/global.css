@@ -25,6 +25,7 @@ main {
   flex-direction: column;
 }
 
+
 /* Variables */
 :root {
   --icon-fontSize-sm: 1rem;

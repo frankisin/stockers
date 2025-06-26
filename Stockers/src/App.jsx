@@ -8,6 +8,8 @@ import Home from './pages/Home';
 import Users from './pages/Users';
 import LoginPage from './app/auth/sign-in/page';
 import RegisterPageComponent from './pages/RegisterPageComponent';
+import Dashboard from './app/dashboard/page';
+
 
 import './App.css'; // Keep your app-specific styles
 import './styles/global.css'; 
@@ -30,6 +32,7 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/register" element={<RegisterPageComponent />} />
           </Routes>
         </main>

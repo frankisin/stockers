@@ -1,8 +1,14 @@
 'use client';
 
-import dynamic from 'next/dynamic';
+import { lazy, Suspense } from 'react';
 import { styled } from '@mui/system';
 
-const ApexChart = dynamic(() => import('react-apexcharts'), { ssr: false, loading: () => null });
+// Lazy load ApexChart
+const ApexChart = lazy(() => import('react-apexcharts'));
 
-export const Chart = styled(ApexChart)``;
+// Styled wrapper (same as before)
+export const Chart = styled((props) => (
+  <Suspense fallback={null}>
+    <ApexChart {...props} />
+  </Suspense>
+))``;

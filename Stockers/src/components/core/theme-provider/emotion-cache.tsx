@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import type { ReactNode } from "react";
-import { useServerInsertedHTML } from "next/navigation";
 import createCache from "@emotion/cache";
 import type { EmotionCache, Options as OptionsOfCreateCache } from "@emotion/cache";
 import { CacheProvider as DefaultCacheProvider } from "@emotion/react";
@@ -47,59 +46,7 @@ export function EmotionCacheProvider(props: EmotionCacheProviderProps) {
 		return { cache, flush };
 	});
 
-	useServerInsertedHTML(() => {
-		const inserted = flush();
-		if (inserted.length === 0) {
-			return null;
-		}
-		let styles = "";
-		let dataEmotionAttribute = cache.key;
 
-		const globals: {
-			name: string;
-			style: string;
-		}[] = [];
-
-		for (const { name, isGlobal } of inserted) {
-			const style = cache.inserted[name];
-
-			if (typeof style === "boolean") {
-				continue;
-			}
-
-			if (isGlobal) {
-				globals.push({ name, style: style! });
-			} else {
-				styles += style;
-				dataEmotionAttribute += ` ${name}`;
-			}
-		}
-
-		// eslint-disable-next-line unicorn/consistent-function-scoping
-		const get__Html = (style: string) => (prepend ? `@layer emotion {${style}}` : style);
-
-		return (
-			<>
-				{globals.map(({ name, style }) => (
-					<style
-						nonce={options.nonce}
-						key={name}
-						data-emotion={`${cache.key}-global ${name}`}
-						dangerouslySetInnerHTML={{ __html: get__Html(style) }}
-					/>
-				))}
-				{styles !== "" && (
-					<style
-						nonce={options.nonce}
-						data-emotion={dataEmotionAttribute}
-						dangerouslySetInnerHTML={{
-							__html: get__Html(styles),
-						}}
-					/>
-				)}
-			</>
-		);
-	});
 
 	return <CacheProvider value={cache}>{children}</CacheProvider>;
 }
