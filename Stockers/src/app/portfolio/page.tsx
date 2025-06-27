@@ -1,8 +1,10 @@
+'use client';
+
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper'; // ← import this
-import Layout from './layout';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import Layout from './layout';
 
 import { Summary } from '../../components/portfolio/overview/Summary';
 import BrushChart from '../../components/portfolio/overview/BrushChart';
@@ -12,6 +14,7 @@ export default function Portfolio(): React.JSX.Element {
     <Layout>
       <Grid container spacing={3}>
         <Grid container spacing={3}>
+          {/* Summary Card */}
           <Grid
             size={{
               lg: 4,
@@ -21,6 +24,8 @@ export default function Portfolio(): React.JSX.Element {
           >
             <Summary />
           </Grid>
+
+          {/* BrushChart inside scrollable Paper */}
           <Grid
             size={{
               lg: 8,
@@ -34,16 +39,14 @@ export default function Portfolio(): React.JSX.Element {
                 p: 2,
                 borderRadius: 3,
                 backgroundColor: 'white',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+                height: '100%',
+                overflowX: 'auto', // allow horizontal scrolling if content overflows
               }}
             >
-              <BrushChart width={720} height={350} /> {/* 👈 Adjust width manually */}
+              <Box sx={{ minWidth: 600 }}>
+                <BrushChart width={800} height={350} />
+              </Box>
             </Paper>
-
-
-
           </Grid>
         </Grid>
       </Grid>
