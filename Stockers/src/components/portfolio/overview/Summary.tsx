@@ -8,6 +8,11 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { SxProps } from '@mui/material/styles';
+import InsertChartIcon from '@mui/icons-material/InsertChart';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+
 
 export interface SummaryProps {
   sx?: SxProps;
@@ -37,21 +42,33 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
           }}
         >
           <Box display="flex" justifyContent="space-between" mb={1}>
-            <Typography variant="body2" color="text.secondary">📊 Monthly</Typography>
-            <Typography variant="body2" color="text.primary">$451.64</Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <InsertChartIcon fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">Monthly</Typography>
           </Box>
+          <Typography variant="body2" color="text.primary">$451.64</Typography>
+        </Box>
           <Box display="flex" justifyContent="space-between" mb={1}>
-            <Typography variant="body2" color="text.secondary">🌞 Daily</Typography>
-            <Typography variant="body2" color="text.primary">$14.85</Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <WbSunnyIcon fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">Daily</Typography>
           </Box>
+          <Typography variant="body2" color="text.primary">$14.85</Typography>
+        </Box>
           <Box display="flex" justifyContent="space-between" mb={1}>
-            <Typography variant="body2" color="text.secondary">📈 Yield</Typography>
-            <Typography variant="body2" color="text.primary">3.38%</Typography>
+          <Box display="flex" alignItems="center" gap={1}>
+            <TrendingUpIcon fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">Yield</Typography>
           </Box>
-          <Box display="flex" justifyContent="space-between">
-            <Typography variant="body2" color="text.secondary">⏳ Yet to receive</Typography>
-            <Typography variant="body2" color="text.primary">$291.77</Typography>
+          <Typography variant="body2" color="text.primary">3.38%</Typography>
+        </Box>
+          <Box display="flex" justifyContent="space-between" mb={1}>
+          <Box display="flex" alignItems="center" gap={1}>
+            <HourglassEmptyIcon fontSize="small" color="action" />
+            <Typography variant="body2" color="text.secondary">Yet to receive</Typography>
           </Box>
+          <Typography variant="body2" color="text.primary">$291.77</Typography>
+        </Box>
         </Card>
       </CardContent>
     </Card>

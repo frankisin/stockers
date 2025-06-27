@@ -5,6 +5,7 @@ import { AxisLeft, AxisBottom } from '@visx/axis';
 import { LinearGradient } from '@visx/gradient';
 import { curveMonotoneX } from '@visx/curve';
 import { AppleStock } from '@visx/mock-data/lib/mocks/appleStock';
+import '../../../styles/theme/components/areachart.css'
 
 // accessors
 const getDate = (d: AppleStock) => new Date(d.date);
@@ -24,7 +25,8 @@ export default function AreaChart({
   top,
   left,
   children,
-  axisColor = '#000',     // default to black
+  axisColor = '#B0B0B0', // Light grey
+
   textColor = '#000',     // default to black
 }: {
   width: number;
@@ -65,10 +67,10 @@ export default function AreaChart({
     <Group left={left || margin.left} top={top || margin.top}>
       <LinearGradient
         id="gradient"
-        from={gradientColor}
-        fromOpacity={1}
-        to={gradientColor}
-        toOpacity={0.2}
+        from="#00C853"       // vibrant green top
+        fromOpacity={0.2}    // increase opacity for stronger color
+        to="#00C853"
+        toOpacity={0.01}     // very transparent bottom
       />
       <AreaClosed<AppleStock>
         data={data}
@@ -76,7 +78,7 @@ export default function AreaChart({
         y={(d) => yScale(getStockValue(d)) || 0}
         yScale={yScale}
         strokeWidth={2}
-        stroke="url(#gradient)"
+        stroke="#00C853" 
         fill="url(#gradient)"
         curve={curveMonotoneX}
       />
@@ -88,6 +90,7 @@ export default function AreaChart({
           stroke={axisColor}
           tickStroke={axisColor}
           tickLabelProps={axisBottomTickLabelProps}
+          axisLineClassName="custom-axis-line" 
         />
       )}
       {!hideLeftAxis && (
@@ -97,8 +100,10 @@ export default function AreaChart({
           stroke={axisColor}
           tickStroke={axisColor}
           tickLabelProps={axisLeftTickLabelProps}
+          axisLineClassName="custom-axis-line"
         />
       )}
+
       {children}
     </Group>
   );

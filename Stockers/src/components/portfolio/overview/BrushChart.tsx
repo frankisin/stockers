@@ -130,6 +130,19 @@ function BrushChart({
         overflow: 'hidden',
       }}
     >
+      <text
+        x={margin.left + 10}
+        y={margin.top - 60}
+        dy="1em"
+        fontSize={30}
+        fontWeight="500"
+        fill="#111"
+        fontFamily="Inter, sans-serif"
+      >
+        Your Earnings
+      </text>
+
+
       <LinearGradient id={GRADIENT_ID} from={background} to={background2} rotate={90} />
       <rect x={0} y={0} width={width} height={height} fill={`url(#${GRADIENT_ID})`} rx={14} />
 
