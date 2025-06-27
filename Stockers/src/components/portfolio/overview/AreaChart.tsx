@@ -48,7 +48,7 @@ export default function AreaChart({
   const axisBottomTickLabelProps = {
     textAnchor: 'middle' as const,
     fontFamily: 'Arial',
-    fontSize: 10,
+    fontSize: 16,
     fill: textColor,
   };
 
@@ -56,7 +56,7 @@ export default function AreaChart({
     dx: '-0.25em',
     dy: '0.25em',
     fontFamily: 'Arial',
-    fontSize: 10,
+    fontSize: 16,
     textAnchor: 'end' as const,
     fill: textColor,
   };

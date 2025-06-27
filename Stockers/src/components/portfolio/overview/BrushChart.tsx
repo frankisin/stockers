@@ -58,7 +58,7 @@ function BrushChart({
 
   const innerHeight = height - margin.top - margin.bottom;
   const topChartBottomMargin = compact ? chartSeparation / 2 : chartSeparation + 10;
-  const topChartHeight = 0.95 * innerHeight - topChartBottomMargin;
+  const topChartHeight = 1 * innerHeight;
   const bottomChartHeight = innerHeight - topChartHeight - chartSeparation;
 
   const chartContentWidth = width; // or a fixed number like 700
