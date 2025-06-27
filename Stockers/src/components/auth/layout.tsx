@@ -15,7 +15,9 @@ export interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps): React.JSX.Element => {
   return (
-    <Box
+    <div>
+      <Navbar />
+          <Box
       sx={{
         display: { xs: 'flex', lg: 'grid' },
         flexDirection: 'column',
@@ -23,7 +25,7 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
         minHeight: '100vh',
       }}
     >
-      <Navbar />
+      
       
       {/* Left Side: Form Panel */}
       <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
@@ -107,9 +109,9 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
           }}
         />
       </Box>
-
-
     </Box>
+    </div>
+
   );
 };
 
