@@ -14,6 +14,7 @@ import Register from './app/auth/sign-up/page';
 
 import './App.css'; // Keep your app-specific styles
 import './styles/global.css'; 
+import StockTracker from './app/stock-tracker/page';
 
 const theme = createTheme(); // Use Devias MUI theme generator
 
@@ -33,6 +34,7 @@ function App() {
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/stock-track" element = {<StockTracker/>}/>
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>

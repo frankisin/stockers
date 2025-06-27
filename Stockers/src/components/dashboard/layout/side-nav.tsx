@@ -51,10 +51,20 @@ export function SideNav(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Box onClick={() => (window.location.href = paths.home)} sx={{ display: 'inline-flex', cursor: 'pointer' }}>
-            <Typography color="inherit" variant="h4">
-              Stockers
-            </Typography>
+        <Box
+          onClick={() => (window.location.href = paths.home)}
+          sx={{ display: 'inline-flex', alignItems: 'baseline', cursor: 'pointer' }}
+        >
+          <Typography color="inherit" variant="h4" sx={{ fontWeight: 700 }}>
+            Stockers
+          </Typography>
+          <Typography
+            color="inherit"
+            variant="caption"
+            sx={{ ml: 0.5, fontWeight: 400, opacity: 0.7 }}
+          >
+            Admin
+          </Typography>
         </Box>
 
       </Stack>
