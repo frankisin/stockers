@@ -20,8 +20,24 @@ export interface SummaryProps {
 
 export function Summary({ sx }: SummaryProps): React.JSX.Element {
   return (
-    <Card sx={sx}>
-      <CardHeader title="Portfolio Total" />
+    <Card sx={
+        sx
+    }>
+      <CardHeader
+        title="Portfolio Summary"
+        slotProps={{
+          title: {
+            sx: {
+              fontSize: '26px',
+              fontWeight: '450',
+              fontFamily: 'Inter, sans-serif',
+              color: 'text.primary',
+            },
+          },
+        }}
+      />
+
+
       <CardContent>
         <Typography variant="h4" color="text.primary">
           $128,490.32
@@ -34,7 +50,7 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
         <Card
           elevation={0}
           sx={{
-            mt: 2,
+            mt: 0,
             p: 2,
             backgroundColor: '#f9f9f9',
             borderRadius: 2,
