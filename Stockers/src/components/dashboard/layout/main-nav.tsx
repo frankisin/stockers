@@ -40,7 +40,23 @@ export function MainNav(): React.JSX.Element {
           sx={{ alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', px: 2 }}
         >
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-            <Box
+
+
+            <IconButton
+              onClick={(): void => {
+                setOpenNav(true);
+              }}
+              sx={{ display: { lg: 'none' } }}
+            >
+              <ListIcon />
+            </IconButton>
+            
+            <Tooltip title="Search">
+              <IconButton>
+                <MagnifyingGlassIcon />
+              </IconButton>
+            </Tooltip>
+                        <Box
               onClick={() => (window.location.href = '/portfolio')}
               sx={{
                 cursor: 'pointer',
@@ -58,20 +74,6 @@ export function MainNav(): React.JSX.Element {
             >
               Portfolio
             </Box>
-
-            <IconButton
-              onClick={(): void => {
-                setOpenNav(true);
-              }}
-              sx={{ display: { lg: 'none' } }}
-            >
-              <ListIcon />
-            </IconButton>
-            <Tooltip title="Search">
-              <IconButton>
-                <MagnifyingGlassIcon />
-              </IconButton>
-            </Tooltip>
           </Stack>
 
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
