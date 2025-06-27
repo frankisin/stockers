@@ -58,13 +58,19 @@ function BrushChart({
 
   const innerHeight = height - margin.top - margin.bottom;
   const topChartBottomMargin = compact ? chartSeparation / 2 : chartSeparation + 10;
-  const topChartHeight = 0.8 * innerHeight - topChartBottomMargin;
+  const topChartHeight = 0.95 * innerHeight - topChartBottomMargin;
   const bottomChartHeight = innerHeight - topChartHeight - chartSeparation;
 
-  const xMax = Math.max(width - margin.left - margin.right, 0);
+  const chartContentWidth = width; // or a fixed number like 700
+  const chartContentX = (width - chartContentWidth) / 2;
+
   const yMax = Math.max(topChartHeight, 0);
-  const xBrushMax = Math.max(width - brushMargin.left - brushMargin.right, 0);
   const yBrushMax = Math.max(bottomChartHeight - brushMargin.top - brushMargin.bottom, 0);
+  const xMax = Math.max(chartContentWidth - margin.left - margin.right, 0);
+  const xBrushMax = Math.max(chartContentWidth - brushMargin.left - brushMargin.right, 0);
+
+
+
 
   const dateScale = useMemo(
     () =>
@@ -113,14 +119,24 @@ function BrushChart({
   );
 
   return (
-    <svg width={width} height={height} style={{ display: 'block', background: background }}>
+    <svg
+      width="100%"
+      height={height}
+      viewBox={`0 0 ${width} ${height}`} // <-- make content scale to `width`
+      preserveAspectRatio="xMidYMid meet"
+      style={{
+        display: 'block',
+        background: background,
+        overflow: 'hidden',
+      }}
+    >
       <LinearGradient id={GRADIENT_ID} from={background} to={background2} rotate={90} />
       <rect x={0} y={0} width={width} height={height} fill={`url(#${GRADIENT_ID})`} rx={14} />
 
       <AreaChart
         hideBottomAxis={compact}
         data={filteredStock}
-        width={width}
+        width={chartContentWidth}
         margin={{ ...margin, bottom: topChartBottomMargin }}
         yMax={yMax}
         xScale={dateScale}
@@ -130,69 +146,71 @@ function BrushChart({
         textColor="#000"
       />
       <foreignObject
-  x={margin.left}
-  y={topChartHeight + topChartBottomMargin + margin.top}
-  width={width - margin.left - margin.right}
-  height={120} // a bit taller for stacked layout
->
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: 'center',
-      padding: '1rem',
-      backgroundColor: '#ffffffcc',
-      borderRadius: '12px',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-      fontFamily: 'Inter, sans-serif',
-      fontSize: '14px',
-      color: '#333',
-    }}
-  >
-    {[
-      [
-        ['Open', '$5.00'],
-        ['Avg', '$5.01'],
-      ],
-      [
-        ['High', '$5.25'],
-        ['Low', '$4.83'],
-      ],
-      [
-        ['52W H', '$5.25'],
-        ['52W L', '$4.83'],
-      ],
-      [
-        ['Vol', '82.77K'],
-        ['Yield', '3.38%'],
-      ],
-      [
-        ['Drawdown', '-8%'],
-        ['Daily Change', '+0.32%'],
-      ],
-    ].map((pair, idx, arr) => (
-      <div
-        key={idx}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0 1rem',
-          borderLeft: idx === 0 ? 'none' : '1px solid #ddd',
-          borderRight: idx === arr.length - 1 ? 'none' : '1px solid #ddd',
-          minWidth: '110px',
-          textAlign: 'center',
-        }}
+        x={0}
+        width={width}
+        y={topChartHeight + topChartBottomMargin + margin.top}
+        height={120}
       >
-        {pair.map(([label, value]) => (
-          <div key={label} style={{ marginBottom: '0.25rem' }}>
-            <strong>{label}:</strong> <span>{value}</span>
-          </div>
-        ))}
-      </div>
-    ))}
-  </div>
-</foreignObject>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            overflowX: 'auto',
+            padding: '1rem',
+            backgroundColor: '#ffffffcc',
+            borderRadius: '12px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+            fontFamily: 'Inter, sans-serif',
+            fontSize: '18px',
+            color: '#333',
+          }}
+        >
+          {[
+            [
+              ['Open', '$5.00'],
+              ['Avg', '$5.01'],
+            ],
+            [
+              ['High', '$5.25'],
+              ['Low', '$4.83'],
+            ],
+            [
+              ['52W H', '$5.25'],
+              ['52W L', '$4.83'],
+            ],
+            [
+              ['Vol', '82.77K'],
+              ['Yield', '3.38%'],
+            ],
+            [
+              ['Drawdown', '-8%'],
+              ['Daily Change', '+0.32%'],
+            ],
+          ].map((pair, idx, arr) => (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 1rem',
+                borderLeft: idx === 0 ? 'none' : '1px solid #ddd',
+                borderRight: idx === arr.length - 1 ? 'none' : '1px solid #ddd',
+                minWidth: '110px',
+                textAlign: 'center',
+              }}
+            >
+              {pair.map(([label, value]) => (
+                <div key={label} style={{ marginBottom: '0.25rem' }}>
+                  <strong>{label}:</strong> <span>{value}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </foreignObject>
+
 
 
 
