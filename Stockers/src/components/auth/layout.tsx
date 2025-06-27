@@ -23,10 +23,11 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
         minHeight: '100vh',
       }}
     >
+      <Navbar />
       
       {/* Left Side: Form Panel */}
       <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
-        <Navbar />
+        
         <Box sx={{ p: 3 }}>
           <Box
             component={Link}
