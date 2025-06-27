@@ -28,7 +28,8 @@ export interface MobileNavProps {
 }
 
 export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element {
-  const pathname = useLocation();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   return (
     <Drawer
@@ -78,7 +79,7 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
       </Stack>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Box component="nav">
-          {renderNavItems({ pathname: location.pathname, items: navItems })}
+        {renderNavItems({ pathname, items: navItems })}
       </Box>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Stack spacing={2} sx={{ p: '12px' }}>
@@ -143,11 +144,17 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
       <Box
         {...(href
           ? {
-              component: external ? 'a' : RouterLink,
-              href,
-              target: external ? '_blank' : undefined,
-              rel: external ? 'noreferrer' : undefined,
-            }
+            component: external ? 'a' : RouterLink,
+            ...(external
+              ? {
+                href,
+                target: '_blank',
+                rel: 'noreferrer',
+              }
+              : {
+                to: href, // this is the important part for RouterLink
+              }),
+          }
           : { role: 'button' })}
         sx={{
           alignItems: 'center',

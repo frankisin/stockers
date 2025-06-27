@@ -44,7 +44,7 @@ export default function Portfolio(): React.JSX.Element {
               }}
             >
               <Box sx={{ minWidth: 600 }}>
-                <BrushChart width={800} height={350} />
+                <BrushChart width={1000} height={350} />
               </Box>
             </Paper>
           </Grid>
