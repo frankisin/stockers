@@ -8,6 +8,7 @@ import Layout from './layout';
 
 import { Summary } from '../../components/portfolio/overview/Summary';
 import BrushChart from '../../components/portfolio/overview/BrushChart';
+import { Wallet } from '../../components/portfolio/overview/Wallet';
 
 export default function Portfolio(): React.JSX.Element {
   return (
@@ -23,6 +24,7 @@ export default function Portfolio(): React.JSX.Element {
             }}
           >
             <Summary />
+            <Wallet/>
           </Grid>
 
           {/* BrushChart inside scrollable Paper */}
