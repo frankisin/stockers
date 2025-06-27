@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import { paths } from '../../paths';
 import { DynamicLogo } from '../../components/core/logo';
-
+import Navbar from '../Navbar';
 import '../../styles/theme/components/circles.css';
 
 export interface LayoutProps {
@@ -23,8 +23,10 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
         minHeight: '100vh',
       }}
     >
+      
       {/* Left Side: Form Panel */}
       <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column' }}>
+        <Navbar />
         <Box sx={{ p: 3 }}>
           <Box
             component={Link}
@@ -46,6 +48,7 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
           <Box sx={{ maxWidth: '450px', width: '100%' }}>{children}</Box>
         </Box>
       </Box>
+      
 
       {/* Right Side: Welcome Panel */}
       <Box

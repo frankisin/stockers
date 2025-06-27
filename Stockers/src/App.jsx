@@ -25,8 +25,7 @@ function App() {
       <CssBaseline /> {}
 
       <div className="app">
-        <Navbar />
-
+      
         <main>
           <Routes>
             <Route path="/" element={<Navigate to="/home" />} />

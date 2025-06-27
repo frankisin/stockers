@@ -1,7 +1,7 @@
 
 /* Wraps all navbar content inside the bar */
 .navbar-container {
-  max-width: 90%;
+  max-width: 100%;
   width: 100%;
   margin: 0 auto;
   display: flex;
@@ -22,7 +22,7 @@
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-  z-index: 999;
+  z-index: 2000;
 }
 
 /* Navbar brand */
@@ -31,6 +31,8 @@
   color: #b8ff67;
   text-decoration: none;
 }
+
+
 
 /* Navbar links */
 .navbar-links {

@@ -1,9 +1,11 @@
 import './Home.css';
 import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 function Home() {
   return (
             <div id="page-top">
+                 <Navbar/>
                 <header className="masthead text-center text-white">
                     <div className="masthead-content">
                         <div className="container px-5">
