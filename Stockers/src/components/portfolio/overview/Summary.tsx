@@ -21,7 +21,7 @@ export interface SummaryProps {
 export function Summary({ sx }: SummaryProps): React.JSX.Element {
   return (
     <Card sx={
-        sx
+      sx
     }>
       <CardHeader
         title="Portfolio Summary"
@@ -36,8 +36,6 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
           },
         }}
       />
-
-
       <CardContent>
         <Typography variant="h4" color="text.primary">
           $128,490.32
@@ -58,33 +56,33 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
           }}
         >
           <Box display="flex" justifyContent="space-between" mb={1}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <InsertChartIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary">Monthly</Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <InsertChartIcon fontSize="small" color="action" />
+              <Typography variant="body2" color="text.secondary">Monthly</Typography>
+            </Box>
+            <Typography variant="body2" color="text.primary">$451.64</Typography>
           </Box>
-          <Typography variant="body2" color="text.primary">$451.64</Typography>
-        </Box>
           <Box display="flex" justifyContent="space-between" mb={1}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <WbSunnyIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary">Daily</Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <WbSunnyIcon fontSize="small" color="action" />
+              <Typography variant="body2" color="text.secondary">Daily</Typography>
+            </Box>
+            <Typography variant="body2" color="text.primary">$14.85</Typography>
           </Box>
-          <Typography variant="body2" color="text.primary">$14.85</Typography>
-        </Box>
           <Box display="flex" justifyContent="space-between" mb={1}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <TrendingUpIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary">Yield</Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <TrendingUpIcon fontSize="small" color="action" />
+              <Typography variant="body2" color="text.secondary">Yield</Typography>
+            </Box>
+            <Typography variant="body2" color="text.primary">3.38%</Typography>
           </Box>
-          <Typography variant="body2" color="text.primary">3.38%</Typography>
-        </Box>
           <Box display="flex" justifyContent="space-between" mb={1}>
-          <Box display="flex" alignItems="center" gap={1}>
-            <HourglassEmptyIcon fontSize="small" color="action" />
-            <Typography variant="body2" color="text.secondary">Yet to receive</Typography>
+            <Box display="flex" alignItems="center" gap={1}>
+              <HourglassEmptyIcon fontSize="small" color="action" />
+              <Typography variant="body2" color="text.secondary">Yet to receive</Typography>
+            </Box>
+            <Typography variant="body2" color="text.primary">$291.77</Typography>
           </Box>
-          <Typography variant="body2" color="text.primary">$291.77</Typography>
-        </Box>
         </Card>
       </CardContent>
     </Card>
