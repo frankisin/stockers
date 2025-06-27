@@ -59,30 +59,22 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
       open={open}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
-        <Box component={RouterLink} sx={{ display: 'inline-flex' }} to={"/home"}>
-          <Logo color="light" height={32} width={122} />
-        </Box>
         <Box
-          sx={{
-            alignItems: 'center',
-            backgroundColor: 'var(--mui-palette-neutral-950)',
-            border: '1px solid var(--mui-palette-neutral-700)',
-            borderRadius: '12px',
-            cursor: 'pointer',
-            display: 'flex',
-            p: '4px 12px',
-          }}
+          onClick={() => (window.location.href = paths.home)}
+          sx={{ display: 'inline-flex', alignItems: 'baseline', cursor: 'pointer' }}
         >
-          <Box sx={{ flex: '1 1 auto' }}>
-            <Typography color="var(--mui-palette-neutral-400)" variant="body2">
-              Workspace
-            </Typography>
-            <Typography color="inherit" variant="subtitle1">
-              Devias
-            </Typography>
-          </Box>
-          <CaretUpDownIcon />
+          <Typography color="inherit" variant="h4" sx={{ fontWeight: 700 }}>
+            Stockers
+          </Typography>
+          <Typography
+            color="inherit"
+            variant="caption"
+            sx={{ ml: 0.5, fontWeight: 400, opacity: 0.7 }}
+          >
+            Admin
+          </Typography>
         </Box>
+
       </Stack>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Box component="nav">
