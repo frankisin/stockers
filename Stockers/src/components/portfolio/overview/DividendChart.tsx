@@ -13,14 +13,14 @@ import { ArrowClockwiseIcon } from '@phosphor-icons/react/dist/ssr/ArrowClockwis
 import { ArrowRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowRight';
 import type { ApexOptions } from 'apexcharts';
 
-import { Chart } from '../../../components/core/chart';
+import { Chart } from '../../core/chart';
 
-export interface SalesProps {
+export interface DividendChartProps {
   chartSeries: { name: string; data: number[] }[];
   sx?: SxProps;
 }
 
-export function Sales({ chartSeries, sx }: SalesProps): React.JSX.Element {
+export function DividendChart({ chartSeries, sx }: DividendChartProps): React.JSX.Element {
   const chartOptions = useChartOptions();
 
   return (
@@ -31,7 +31,7 @@ export function Sales({ chartSeries, sx }: SalesProps): React.JSX.Element {
             Sync
           </Button>
         }
-        title="Sales"
+        title="Monthly Dividends"
       />
       <CardContent>
         <Chart height={350} options={chartOptions} series={chartSeries} type="bar" width="100%" />

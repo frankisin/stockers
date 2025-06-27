@@ -40,6 +40,25 @@ export function MainNav(): React.JSX.Element {
           sx={{ alignItems: 'center', justifyContent: 'space-between', minHeight: '64px', px: 2 }}
         >
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
+            <Box
+              onClick={() => (window.location.href = '/portfolio')}
+              sx={{
+                cursor: 'pointer',
+                px: 2,
+                py: 1,
+                borderRadius: 1,
+                fontWeight: 600,
+                fontSize: '1rem',
+                color: 'text.primary',         // makes text black (or dark depending on theme)
+                bgcolor: 'transparent',        // transparent background
+                '&:hover': {
+                  textDecoration: 'underline', // optional: subtle hover effect
+                },
+              }}
+            >
+              Portfolio
+            </Box>
+
             <IconButton
               onClick={(): void => {
                 setOpenNav(true);
@@ -54,6 +73,7 @@ export function MainNav(): React.JSX.Element {
               </IconButton>
             </Tooltip>
           </Stack>
+
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
             <Tooltip title="Contacts">
               <IconButton>

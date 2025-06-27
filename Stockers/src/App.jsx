@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, CssBaseline } from '@mui/material';
-
-import { createTheme } from './styles/theme/create-theme'; 
-import Navbar from './components/Navbar';
+import { createTheme } from './styles/theme/create-theme';
 import Home from './pages/Home';
 import Users from './pages/Users';
 import LoginPage from './app/auth/sign-in/page';
-import RegisterPageComponent from './pages/RegisterPageComponent';
 import Dashboard from './app/dashboard/page';
 import Register from './app/auth/sign-up/page';
-
-
-import './App.css'; // Keep your app-specific styles
+import './App.css'; 
 import './styles/global.css'; 
-import StockTracker from './app/stock-tracker/page';
+import Portfolio from './app/portfolio/page';
 
 const theme = createTheme(); // Use Devias MUI theme generator
 
@@ -34,7 +29,7 @@ function App() {
             <Route path="/users" element={<Users />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/stock-track" element = {<StockTracker/>}/>
+            <Route path="/portfolio" element = {<Portfolio/>}/>
             <Route path="/register" element={<Register />} />
           </Routes>
         </main>
