@@ -122,7 +122,7 @@ function BrushChart({
     <svg
       width="100%"
       height={height}
-      viewBox={`0 0 ${width} ${height}`} // <-- make content scale to `width`
+      viewBox={`0 0 ${width} ${height}`} 
       preserveAspectRatio="xMidYMid meet"
       style={{
         display: 'block',
@@ -135,7 +135,7 @@ function BrushChart({
         y={margin.top - 60}
         dy="1em"
         fontSize={30}
-        fontWeight="500"
+        fontWeight="600"
         fill="#111"
         fontFamily="Inter, sans-serif"
       >

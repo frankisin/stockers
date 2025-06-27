@@ -9,6 +9,8 @@ import Layout from './layout';
 import { Summary } from '../../components/portfolio/overview/Summary';
 import BrushChart from '../../components/portfolio/overview/BrushChart';
 import { Wallet } from '../../components/portfolio/overview/Wallet';
+import { PortfolioNews } from '../../components/portfolio/overview/PortfolioNews';
+
 
 export default function Portfolio(): React.JSX.Element {
   return (
@@ -47,10 +49,11 @@ export default function Portfolio(): React.JSX.Element {
             >
               <Box sx={{ minWidth: 600 }}>
                 <BrushChart width={1200} height={510} margin={{ top: 0, left: 50, bottom: 20, right: 20 }} />
-
               </Box>
             </Paper>
           </Grid>
+          <PortfolioNews />
+
         </Grid>
       </Grid>
     </Layout>
