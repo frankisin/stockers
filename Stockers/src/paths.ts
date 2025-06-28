@@ -1,10 +1,11 @@
 export const paths = {
   home: '/',
   auth: { signIn: '/login', signUp: '/register', resetPassword: '/auth/reset-password' },
+  portfolio : '/portfolio',
   dashboard: {
     overview: '/dashboard',
     account: '/dashboard/account',
-    customers: '/dashboard/customers',
+    portfolio: '/portfolio',
     integrations: '/dashboard/integrations',
     settings: '/dashboard/settings',
   },

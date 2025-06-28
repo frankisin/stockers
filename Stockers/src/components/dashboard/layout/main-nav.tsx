@@ -56,24 +56,7 @@ export function MainNav(): React.JSX.Element {
                 <MagnifyingGlassIcon />
               </IconButton>
             </Tooltip>
-                        <Box
-              onClick={() => (window.location.href = '/portfolio')}
-              sx={{
-                cursor: 'pointer',
-                px: 2,
-                py: 1,
-                borderRadius: 1,
-                fontWeight: 600,
-                fontSize: '1rem',
-                color: 'text.primary',         // makes text black (or dark depending on theme)
-                bgcolor: 'transparent',        // transparent background
-                '&:hover': {
-                  textDecoration: 'underline', // optional: subtle hover effect
-                },
-              }}
-            >
-              Portfolio
-            </Box>
+            
           </Stack>
 
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>

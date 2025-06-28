@@ -1,11 +1,12 @@
 import './Home.css';
 import { Link } from 'react-router-dom';
+import { SecondaryNav } from '../components/dashboard/layout/secondary-nav';
 import Navbar from '../components/Navbar';
 
 function Home() {
   return (
             <div id="page-top">
-                 <Navbar/>
+                 <SecondaryNav/>
                 <header className="masthead text-center text-white">
                     <div className="masthead-content">
                         <div className="container px-5">
