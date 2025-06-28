@@ -1,60 +1,58 @@
 'use client';
 
 import * as React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation, Link as RouterLink } from 'react-router-dom';
+
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import type { NavItemConfig } from '../../../types/nav';
+import { navItems } from './config';
 import { paths } from '../../../paths';
 import { isNavItemActive } from '../../../lib/is-nav-item-active';
-import { navItems } from './config';
 import { navIcons } from './nav-icons';
 
-interface SecondarySideNavProps {
-  open: boolean;
-  onClose: () => void;
+export interface SecondarySideNavProps {
+  open?: boolean;
+  onClose?: () => void;
 }
 
 export function SecondarySideNav({ open, onClose }: SecondarySideNavProps): React.JSX.Element {
   const location = useLocation();
   const pathname = location.pathname;
 
-  if (!open) return <></>;
-
   return (
-    <Box
-      sx={{
-        '--SideNav-background': 'var(--mui-palette-neutral-950)',
-        '--SideNav-color': 'var(--mui-palette-common-white)',
-        '--NavItem-color': 'var(--mui-palette-neutral-300)',
-        '--NavItem-hover-background': 'rgba(255, 255, 255, 0.04)',
-        '--NavItem-active-background': 'var(--mui-palette-primary-main)',
-        '--NavItem-active-color': 'var(--mui-palette-primary-contrastText)',
-        '--NavItem-disabled-color': 'var(--mui-palette-neutral-500)',
-        '--NavItem-icon-color': 'var(--mui-palette-neutral-400)',
-        '--NavItem-icon-active-color': 'var(--mui-palette-primary-contrastText)',
-        '--NavItem-icon-disabled-color': 'var(--mui-palette-neutral-600)',
-        display: { xs: 'flex', lg: 'none' },
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '80%',
-        maxWidth: 320,
-        height: '100%',
-        bgcolor: 'var(--SideNav-background)',
-        zIndex: 1300,
-        flexDirection: 'column',
-        boxShadow: 6,
+    <Drawer
+      anchor="left"
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          '--SideNav-background': 'var(--mui-palette-neutral-950)',
+          '--SideNav-color': 'var(--mui-palette-common-white)',
+          '--NavItem-color': 'var(--mui-palette-neutral-300)',
+          '--NavItem-hover-background': 'rgba(255, 255, 255, 0.04)',
+          '--NavItem-active-background': 'var(--mui-palette-primary-main)',
+          '--NavItem-active-color': 'var(--mui-palette-primary-contrastText)',
+          '--NavItem-disabled-color': 'var(--mui-palette-neutral-500)',
+          '--NavItem-icon-color': 'var(--mui-palette-neutral-400)',
+          '--NavItem-icon-active-color': 'var(--mui-palette-primary-contrastText)',
+          '--NavItem-icon-disabled-color': 'var(--mui-palette-neutral-600)',
+          bgcolor: 'var(--SideNav-background)',
+          color: 'var(--SideNav-color)',
+          width: 280,
+        },
       }}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box
           onClick={() => {
             window.location.href = paths.home;
-            onClose();
+            onClose?.();
           }}
           sx={{ display: 'inline-flex', alignItems: 'baseline', cursor: 'pointer' }}
         >
@@ -65,23 +63,27 @@ export function SecondarySideNav({ open, onClose }: SecondarySideNavProps): Reac
       </Stack>
 
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
-      <Box component="nav" sx={{ flex: '1 1 auto', p: '12px' }}>
-        <NavList items={navItems} pathname={pathname} onClose={onClose} />
+
+      <Box component="nav">
+        {renderNavItems({ pathname, items: navItems, onClose })}
       </Box>
-      <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
-    </Box>
+
+      <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)', mt: 'auto' }} />
+    </Drawer>
   );
 }
 
-interface NavListProps {
+function renderNavItems({
+  items = [],
+  pathname,
+  onClose,
+}: {
   items?: NavItemConfig[];
   pathname: string;
-  onClose: () => void;
-}
-
-function NavList({ items = [], pathname, onClose }: NavListProps): React.JSX.Element {
-  const children = items.map((item) => (
-    <NavItem key={item.key} pathname={pathname} onClose={onClose} {...item} />
+  onClose?: () => void;
+}): React.JSX.Element {
+  const children = items.map(({ key, ...item }) => (
+    <NavItem key={key} pathname={pathname} onClose={onClose} {...item} />
   ));
 
   return (
@@ -93,7 +95,7 @@ function NavList({ items = [], pathname, onClose }: NavListProps): React.JSX.Ele
 
 interface NavItemProps extends Omit<NavItemConfig, 'items'> {
   pathname: string;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 function NavItem({
@@ -106,24 +108,22 @@ function NavItem({
   title,
   onClose,
 }: NavItemProps): React.JSX.Element {
-  const navigate = useNavigate();
   const active = isNavItemActive({ disabled, external, href, matcher, pathname });
   const Icon = icon ? navIcons[icon] : null;
 
   const handleClick = () => {
-    if (external && href) {
-      window.open(href, '_blank', 'noreferrer');
-    } else if (href) {
-      navigate(href);
-    }
-    onClose(); // close nav after navigation
+    onClose?.();
   };
+
+  const linkProps = external
+    ? { href, target: '_blank', rel: 'noreferrer' }
+    : { to: href, component: RouterLink };
 
   return (
     <li>
       <Box
+        {...(href ? linkProps : { role: 'button' })}
         onClick={handleClick}
-        role="button"
         sx={{
           alignItems: 'center',
           borderRadius: 1,
@@ -132,6 +132,8 @@ function NavItem({
           display: 'flex',
           gap: 1,
           p: '6px 16px',
+          textDecoration: 'none',
+          whiteSpace: 'nowrap',
           ...(disabled && {
             bgcolor: 'var(--NavItem-disabled-background)',
             color: 'var(--NavItem-disabled-color)',
@@ -154,12 +156,7 @@ function NavItem({
         <Box sx={{ flex: 1 }}>
           <Typography
             component="span"
-            sx={{
-              color: 'inherit',
-              fontSize: '0.875rem',
-              fontWeight: 500,
-              lineHeight: '28px',
-            }}
+            sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 500, lineHeight: '28px' }}
           >
             {title}
           </Typography>
