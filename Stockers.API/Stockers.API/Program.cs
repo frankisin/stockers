@@ -49,12 +49,21 @@ builder.Services.AddDbContext<DataContext>(options =>
 var app = builder.Build();
 
 // CORS
-app.UseCors(cors =>
-    cors.WithOrigins("http://localhost:4200","http://localhost:5173")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials());
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowWebClients", policy =>
+    {
+        policy
+            .WithOrigins(
+                "http://localhost:5173",
+                "http://localhost:4200",
+                "https://stockers-site.onrender.com"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
 // Auth middleware
 app.UseAuthentication();
 app.UseAuthorization();
