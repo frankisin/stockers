@@ -50,7 +50,7 @@ var app = builder.Build();
 
 // CORS
 app.UseCors(cors =>
-    cors.WithOrigins("http://localhost:4200")
+    cors.WithOrigins("http://localhost:4200","http://localhost:5173")
         .AllowAnyHeader()
         .AllowAnyMethod()
         .AllowCredentials());
