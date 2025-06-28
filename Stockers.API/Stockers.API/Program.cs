@@ -46,7 +46,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-var app = builder.Build();
+
 
 // CORS
 builder.Services.AddCors(options =>
@@ -64,6 +64,7 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+var app = builder.Build();
 // Auth middleware
 app.UseAuthentication();
 app.UseAuthorization();
