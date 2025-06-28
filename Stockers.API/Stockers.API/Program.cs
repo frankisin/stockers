@@ -26,6 +26,8 @@ builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<TokenService>();
 
 // EF Core DB context
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -43,10 +45,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
         };
     });
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-
 
 // CORS
 builder.Services.AddCors(options =>
@@ -64,8 +62,22 @@ builder.Services.AddCors(options =>
             .AllowCredentials();
     });
 });
+
 var app = builder.Build();
-// Auth middleware
+
+app.UseCors("AllowWebClients");
+
+app.Use(async (context, next) =>
+{
+    if (context.Request.Method == "OPTIONS")
+    {
+        context.Response.StatusCode = 204;
+        return;
+    }
+
+    await next();
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -73,7 +85,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Stockers API V1");
-    c.RoutePrefix = "swagger"; // so it's accessible at /swagger
+    c.RoutePrefix = "swagger";
 });
 
 app.UseHttpsRedirection();
