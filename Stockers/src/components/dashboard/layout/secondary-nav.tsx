@@ -17,8 +17,9 @@ import { Link } from 'react-router-dom';
 import '../../Navbar.css';
 
 import { usePopover } from '../../../hooks/use-popover';
-import { MobileNav } from './mobile-nav';
+import { SecondarySideNav } from './secondary-side-nav';
 import { UserPopover } from './user-popover';
+
 
 export function SecondaryNav(): React.JSX.Element {
   const [openNav, setOpenNav] = React.useState<boolean>(false);
@@ -78,7 +79,7 @@ export function SecondaryNav(): React.JSX.Element {
 
             {/* Portfolio Link */}
             <Box
-              onClick={() => (window.location.href = '/home')}
+              onClick={() => (window.location.href = '/portfolio')}
               sx={{
                 cursor: 'pointer',
                 px: 2,
@@ -140,7 +141,9 @@ export function SecondaryNav(): React.JSX.Element {
         onClose={userPopover.handleClose}
         open={userPopover.open}
       />
-      <MobileNav open={openNav} onClose={() => setOpenNav(false)} />
+      <SecondarySideNav open={openNav} onClose={() => setOpenNav(false)} />
+
+
     </React.Fragment>
   );
 }

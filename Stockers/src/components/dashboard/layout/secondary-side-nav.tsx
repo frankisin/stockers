@@ -3,24 +3,26 @@
 import * as React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { ArrowSquareUpRightIcon } from '@phosphor-icons/react/dist/ssr/ArrowSquareUpRight';
-import { CaretUpDownIcon } from '@phosphor-icons/react/dist/ssr/CaretUpDown';
 
 import type { NavItemConfig } from '../../../types/nav';
 import { paths } from '../../../paths';
 import { isNavItemActive } from '../../../lib/is-nav-item-active';
-import { Logo } from '../../../components/core/logo';
-
 import { navItems } from './config';
 import { navIcons } from './nav-icons';
 
-export function SideNav(): React.JSX.Element {
+interface SecondarySideNavProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export function SecondarySideNav({ open, onClose }: SecondarySideNavProps): React.JSX.Element {
   const location = useLocation();
   const pathname = location.pathname;
+
+  if (!open) return <></>;
 
   return (
     <Box
@@ -35,52 +37,51 @@ export function SideNav(): React.JSX.Element {
         '--NavItem-icon-color': 'var(--mui-palette-neutral-400)',
         '--NavItem-icon-active-color': 'var(--mui-palette-primary-contrastText)',
         '--NavItem-icon-disabled-color': 'var(--mui-palette-neutral-600)',
-        bgcolor: 'var(--SideNav-background)',
-        color: 'var(--SideNav-color)',
-        display: { xs: 'none', lg: 'flex' },
-        flexDirection: 'column',
-        height: '100%',
-        left: 0,
-        maxWidth: '100%',
+        display: { xs: 'flex', lg: 'none' },
         position: 'fixed',
-        scrollbarWidth: 'none',
         top: 0,
-        width: 'var(--SideNav-width)',
-        zIndex: 'var(--SideNav-zIndex)',
-        '&::-webkit-scrollbar': { display: 'none' },
+        left: 0,
+        width: '80%',
+        maxWidth: 320,
+        height: '100%',
+        bgcolor: 'var(--SideNav-background)',
+        zIndex: 1300,
+        flexDirection: 'column',
+        boxShadow: 6,
       }}
     >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box
-          onClick={() => (window.location.href = paths.home)}
+          onClick={() => {
+            window.location.href = paths.home;
+            onClose();
+          }}
           sx={{ display: 'inline-flex', alignItems: 'baseline', cursor: 'pointer' }}
         >
-          <Typography color="inherit" variant="h4" sx={{ fontWeight: 700 }}>
+          <Typography color="inherit" variant="h5" sx={{ fontWeight: 700 }}>
             Stockers
           </Typography>
-          <Typography
-            color="inherit"
-            variant="caption"
-            sx={{ ml: 0.5, fontWeight: 400, opacity: 0.7 }}
-          >
-            Admin
-          </Typography>
         </Box>
-
       </Stack>
+
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
       <Box component="nav" sx={{ flex: '1 1 auto', p: '12px' }}>
-        {renderNavItems({ pathname, items: navItems })}
+        <NavList items={navItems} pathname={pathname} onClose={onClose} />
       </Box>
       <Divider sx={{ borderColor: 'var(--mui-palette-neutral-700)' }} />
-
     </Box>
   );
 }
 
-function renderNavItems({ items = [], pathname }: { items?: NavItemConfig[]; pathname: string }): React.JSX.Element {
+interface NavListProps {
+  items?: NavItemConfig[];
+  pathname: string;
+  onClose: () => void;
+}
+
+function NavList({ items = [], pathname, onClose }: NavListProps): React.JSX.Element {
   const children = items.map((item) => (
-    <NavItem key={item.key} pathname={pathname} {...item} />
+    <NavItem key={item.key} pathname={pathname} onClose={onClose} {...item} />
   ));
 
   return (
@@ -92,19 +93,30 @@ function renderNavItems({ items = [], pathname }: { items?: NavItemConfig[]; pat
 
 interface NavItemProps extends Omit<NavItemConfig, 'items'> {
   pathname: string;
+  onClose: () => void;
 }
 
-function NavItem({ disabled, external, href, icon, matcher, pathname, title }: NavItemProps): React.JSX.Element {
+function NavItem({
+  disabled,
+  external,
+  href,
+  icon,
+  matcher,
+  pathname,
+  title,
+  onClose,
+}: NavItemProps): React.JSX.Element {
   const navigate = useNavigate();
   const active = isNavItemActive({ disabled, external, href, matcher, pathname });
   const Icon = icon ? navIcons[icon] : null;
 
   const handleClick = () => {
-    if (external) {
+    if (external && href) {
       window.open(href, '_blank', 'noreferrer');
     } else if (href) {
       navigate(href);
     }
+    onClose(); // close nav after navigation
   };
 
   return (
@@ -118,32 +130,36 @@ function NavItem({ disabled, external, href, icon, matcher, pathname, title }: N
           color: 'var(--NavItem-color)',
           cursor: disabled ? 'not-allowed' : 'pointer',
           display: 'flex',
-          flex: '0 0 auto',
           gap: 1,
           p: '6px 16px',
-          position: 'relative',
-          textDecoration: 'none',
-          whiteSpace: 'nowrap',
           ...(disabled && {
             bgcolor: 'var(--NavItem-disabled-background)',
             color: 'var(--NavItem-disabled-color)',
           }),
-          ...(active && { bgcolor: 'var(--NavItem-active-background)', color: 'var(--NavItem-active-color)' }),
+          ...(active && {
+            bgcolor: 'var(--NavItem-active-background)',
+            color: 'var(--NavItem-active-color)',
+          }),
         }}
       >
-        <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'center', flex: '0 0 auto' }}>
-          {Icon && (
+        {Icon && (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Icon
               fill={active ? 'var(--NavItem-icon-active-color)' : 'var(--NavItem-icon-color)'}
               fontSize="var(--icon-fontSize-md)"
               weight={active ? 'fill' : undefined}
             />
-          )}
-        </Box>
-        <Box sx={{ flex: '1 1 auto' }}>
+          </Box>
+        )}
+        <Box sx={{ flex: 1 }}>
           <Typography
             component="span"
-            sx={{ color: 'inherit', fontSize: '0.875rem', fontWeight: 500, lineHeight: '28px' }}
+            sx={{
+              color: 'inherit',
+              fontSize: '0.875rem',
+              fontWeight: 500,
+              lineHeight: '28px',
+            }}
           >
             {title}
           </Typography>
