@@ -1,12 +1,12 @@
-﻿using lostborn_backend.Helpers;
-using lostborn_backend.Models;
+﻿using Stockers.API.Helpers;
+using Stockers.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace lostborn_backend.Controllers
+namespace Stockers.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

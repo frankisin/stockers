@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using Stockers.API.Models;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class CasinoTransaction
     {
@@ -15,6 +16,6 @@ namespace lostborn_backend.Models
         public decimal BalanceAfter { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
-        public User User { get; set; } // Navigation property
+        public Users User { get; set; } // Navigation property
     }
 }

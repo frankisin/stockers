@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class PaymentMethod
     {
@@ -14,7 +14,7 @@ namespace lostborn_backend.Models
         public int UserID { get; set; } // Foreign key to Users table
 
         [ForeignKey("UserID")]
-        public User User { get; set; } // Navigation property to the Users table
+        public Users User { get; set; } // Navigation property to the Users table
 
         [Required]
         public string CardNumber { get; set; } // Masked card number, e.g., **** **** **** 1234

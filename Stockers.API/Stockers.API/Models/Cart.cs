@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class Carts
     {
@@ -13,7 +13,7 @@ namespace lostborn_backend.Models
         public int UserID { get; set; }
 
         [JsonIgnore]
-        public User User { get; set; }
+        public Users User { get; set; }
 
         // Collection of items in the cart
         public List<CartItem> CartItems { get; set; }

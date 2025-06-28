@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using lostborn_backend.Models;
+using Stockers.API.Models;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class Invoice
 	{
@@ -15,7 +15,7 @@ namespace lostborn_backend.Models
         public int UserID { get; set; } // Foreign key to the user
 
         [ForeignKey("UserID")]
-        public User User { get; set; } // Navigation property for the user
+        public Users User { get; set; } // Navigation property for the user
 
         [Required]
         public DateTime InvoiceDate { get; set; } // Date of invoice generation

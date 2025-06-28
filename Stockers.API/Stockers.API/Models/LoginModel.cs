@@ -1,4 +1,4 @@
-﻿namespace lostborn_backend.Models
+﻿namespace Stockers.API.Models
 {
     public class LoginModel
     {

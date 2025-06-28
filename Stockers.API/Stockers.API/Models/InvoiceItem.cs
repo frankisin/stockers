@@ -1,9 +1,9 @@
 ﻿using System;
-using lostborn_backend.Models;
+using Stockers.API.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
 	public class InvoiceItem
 	{

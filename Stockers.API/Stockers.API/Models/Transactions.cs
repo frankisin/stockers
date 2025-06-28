@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class Transaction
     {

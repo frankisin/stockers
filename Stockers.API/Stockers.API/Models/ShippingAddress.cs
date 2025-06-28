@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class ShippingAddress
     {
@@ -13,7 +13,7 @@ namespace lostborn_backend.Models
         public int UserID { get; set; } // Foreign key to Users table
 
         [ForeignKey("UserID")]
-        public User User { get; set; } // Navigation property to the Users table
+        public Users User { get; set; } // Navigation property to the Users table
 
         [Required]
         [StringLength(255)]

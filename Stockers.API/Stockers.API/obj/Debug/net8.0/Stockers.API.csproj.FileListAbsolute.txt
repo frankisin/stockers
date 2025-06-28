@@ -275,3 +275,7 @@ E:/Projects/Stockers/Stockers.API/Stockers.API/obj/Debug/net8.0/staticwebassets.
 /Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/obj/Debug/net8.0/Stockers.API.pdb
 /Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/obj/Debug/net8.0/Stockers.API.genruntimeconfig.cache
 /Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/obj/Debug/net8.0/ref/Stockers.API.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/BCrypt.Net-Next.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/BouncyCastle.Crypto.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll

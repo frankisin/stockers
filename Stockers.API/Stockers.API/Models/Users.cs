@@ -1,43 +1,64 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
-    [Table("users")]
-    public class User
+    public class Users
     {
         [Key]
-        [Column("id")]
-        public int Id { get; set; }
+        public int ID { get; set; }
 
-        [Column("firstname")]
-        public string FirstName { get; set; }
+        [Required]
+        public string firstName { get; set; }
 
-        [Column("lastname")]
-        public string LastName { get; set; }
+        [Required]
+        public string lastName { get; set; }
 
-        [Column("streetaddress")]
-        public string StreetAddress { get; set; }
+        [Required]
+        public string streetAddress { get; set; }
 
-        [Column("city")]
-        public string City { get; set; }
+        [Required]
+        public string city { get; set; }
 
-        [Column("zipcode")]
-        public string ZipCode { get; set; }
+        [Required]
+        public string zipCode { get; set; }
 
-        [Column("email")]
-        public string Email { get; set; }
+        [Required]
+        public string email { get; set; }
 
-        [Column("username")]
-        public string Username { get; set; }
+        [Required]
+        public string username { get; set; }
 
-        [Column("password")]
-        public string Password { get; set; }
+        [Required]
+        public string password { get; set; }
 
-        [Column("role")]
+        [Required]
         public string Role { get; set; }
 
+        [Required]
+        public decimal userBalance { get; set; }
 
+
+
+        // Navigation property to represent the one-to-one relationship with Cart
+        public Carts Cart { get; set; }
+
+        public Users() { }
+
+        public Users(int id, string firstName, string lastName, string streetAddress, string city, string zipCode, string email, string username, string password, string Role,decimal userBalance)
+        {
+            ID = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.streetAddress = streetAddress;
+            this.city = city;
+            this.zipCode = zipCode;
+            this.email = email;
+            this.username = username;
+            this.password = password;
+            this.Role = Role;
+            this.userBalance = userBalance;
+
+        }
     }
 }

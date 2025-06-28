@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class CartItem
     {

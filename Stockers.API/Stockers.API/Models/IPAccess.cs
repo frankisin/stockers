@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace lostborn_backend.Models
+namespace Stockers.API.Models
 {
     public class IPAccess
     {

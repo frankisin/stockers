@@ -1,6 +1,6 @@
-﻿using lostborn_backend.Helpers;
-using lostborn_backend.Models;
-using lostborn_web_API.Services;
+﻿using Stockers.API.Helpers;
+using Stockers.API.Models;
+using Stockers.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace lostborn_backend.Controllers
+namespace Stockers.API.Controllers
 {
     [Authorize]
     [ApiController]
