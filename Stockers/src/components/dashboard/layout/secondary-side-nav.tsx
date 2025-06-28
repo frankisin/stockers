@@ -11,7 +11,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import type { NavItemConfig } from '../../../types/nav';
-import { navItems } from './config';
+import { navItems } from './landingConfig';
 import { paths } from '../../../paths';
 import { isNavItemActive } from '../../../lib/is-nav-item-active';
 import { navIcons } from './nav-icons';
