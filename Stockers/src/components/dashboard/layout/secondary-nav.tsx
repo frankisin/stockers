@@ -78,24 +78,7 @@ export function SecondaryNav(): React.JSX.Element {
             </Tooltip>
 
             {/* Portfolio Link */}
-            <Box
-              onClick={() => (window.location.href = '/portfolio')}
-              sx={{
-                cursor: 'pointer',
-                px: 2,
-                py: 1,
-                borderRadius: 1,
-                fontWeight: 600,
-                fontSize: '1rem',
-                color: 'text.primary',
-                bgcolor: 'transparent',
-                '&:hover': {
-                  textDecoration: 'underline',
-                },
-              }}
-            >
-              Portfolio
-            </Box>
+
           </Stack>
 
           {/* Right side: User tools + Auth links */}
