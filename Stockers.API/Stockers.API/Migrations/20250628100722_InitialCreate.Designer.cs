@@ -12,7 +12,7 @@ using Stockers.API.Helpers;
 namespace Stockers.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250628092304_InitialCreate")]
+    [Migration("20250628100722_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
