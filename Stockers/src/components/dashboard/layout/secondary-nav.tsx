@@ -94,11 +94,6 @@ export function SecondaryNav(): React.JSX.Element {
             </Box>
 
             {/* Icons */}
-            <Tooltip title="Contacts">
-              <IconButton>
-                <UsersIcon />
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Notifications">
               <Badge badgeContent={4} color="success" variant="dot">
                 <IconButton>
