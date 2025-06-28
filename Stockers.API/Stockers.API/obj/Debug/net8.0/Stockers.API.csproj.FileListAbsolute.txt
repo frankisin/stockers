@@ -279,3 +279,6 @@ E:/Projects/Stockers/Stockers.API/Stockers.API/obj/Debug/net8.0/staticwebassets.
 /Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/BouncyCastle.Crypto.dll
 /Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
 /Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.dll
+/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll

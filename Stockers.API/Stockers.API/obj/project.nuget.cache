@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "baONXAFC79w=",
+  "dgSpecHash": "VIokrEHyNxA=",
   "success": true,
   "projectFilePath": "/Users/frankvelazquez/Projects/Stockers/stockers/Stockers.API/Stockers.API/Stockers.API.csproj",
   "expectedPackageFiles": [
     "/Users/frankvelazquez/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/bouncycastle/1.8.9/bouncycastle.1.8.9.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
+    "/Users/frankvelazquez/.nuget/packages/microsoft.aspnetcore.authentication.jwtbearer/8.0.6/microsoft.aspnetcore.authentication.jwtbearer.8.0.6.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.bcl.asyncinterfaces/7.0.0/microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.build.framework/17.8.3/microsoft.build.framework.17.8.3.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.build.locator/1.7.8/microsoft.build.locator.1.7.8.nupkg.sha512",
@@ -35,6 +36,8 @@
     "/Users/frankvelazquez/.nuget/packages/microsoft.identitymodel.abstractions/8.12.1/microsoft.identitymodel.abstractions.8.12.1.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.12.1/microsoft.identitymodel.jsonwebtokens.8.12.1.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.identitymodel.logging/8.12.1/microsoft.identitymodel.logging.8.12.1.nupkg.sha512",
+    "/Users/frankvelazquez/.nuget/packages/microsoft.identitymodel.protocols/7.1.2/microsoft.identitymodel.protocols.7.1.2.nupkg.sha512",
+    "/Users/frankvelazquez/.nuget/packages/microsoft.identitymodel.protocols.openidconnect/7.1.2/microsoft.identitymodel.protocols.openidconnect.7.1.2.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.identitymodel.tokens/8.12.1/microsoft.identitymodel.tokens.8.12.1.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/microsoft.openapi/1.6.14/microsoft.openapi.1.6.14.nupkg.sha512",
     "/Users/frankvelazquez/.nuget/packages/mono.texttemplating/3.0.0/mono.texttemplating.3.0.0.nupkg.sha512",
