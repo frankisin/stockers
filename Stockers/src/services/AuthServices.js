@@ -1,16 +1,16 @@
-import API from '../app/config/api';
+import api from './API';
 
-export const login = async (email, password) => {
-  try {
-    const response = await API.post('/login', {
-      email,
-      password
-    });
+export const AuthService = {
+  login: async (username, password) => {
+    try {
+      const response = await api.post('/auth/login', {
+        username,
+        password
+      });
 
-    localStorage.setItem('token', response.data.token);
-    return response.data;
-  } catch (error) {
-    console.error('Login failed', error);
-    throw error;
+      return response.data; // this might include a token or user info
+    } catch (error) {
+      throw error.response?.data?.message || 'Login failed';
+    }
   }
 };
