@@ -31,7 +31,9 @@ namespace Stockers.API.Helpers
                 .WithOne(c => c.User)         // One Cart belongs to one User
                 .HasForeignKey<Carts>(c => c.UserID); // Foreign key in Carts referencing Users
                                
-
+            modelBuilder.Entity<Users>()
+            .Property(u => u.ID)
+            .UseIdentityByDefaultColumn();
             // One-to-Many relationship between Carts and CartItems
             modelBuilder.Entity<Carts>()
                 .HasMany(c => c.CartItems)    // One Cart has many CartItems
