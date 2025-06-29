@@ -117,11 +117,15 @@ namespace Stockers.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] Users user)
         {
+            user.userBalance = 0; // Default
+            user.Cart = new Carts(); // Default empty cart
+
             await dataContext.Users.AddAsync(user);
             await dataContext.SaveChangesAsync();
 
             return CreatedAtAction(nameof(AddUser), user);
         }
+
 
         [HttpPut]
         public async Task<IActionResult> PutUser(UpdateUserDto userDto)
