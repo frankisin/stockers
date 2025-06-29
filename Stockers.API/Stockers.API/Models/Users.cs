@@ -45,7 +45,7 @@ namespace Stockers.API.Models
 
         public Users() { }
 
-        public Users(int id, string firstName, string lastName, string streetAddress, string city, string zipCode, string email, string username, string password, string Role,decimal userBalance)
+        public Users(int id, string firstName, string lastName, string streetAddress, string city, string zipCode, string email, string username, string password, string Role, decimal userBalance)
         {
             ID = id;
             this.firstName = firstName;
@@ -60,5 +60,6 @@ namespace Stockers.API.Models
             this.userBalance = userBalance;
 
         }
+        
     }
 }

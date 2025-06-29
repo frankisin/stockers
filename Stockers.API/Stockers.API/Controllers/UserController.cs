@@ -115,10 +115,22 @@ namespace Stockers.API.Controllers
         }
         // API Call to add a new user entry...(CREATE)
         [HttpPost]
-        public async Task<IActionResult> AddUser([FromBody] Users user)
+        public async Task<IActionResult> AddUser([FromBody] UserSignUpDto userDto)
         {
-            user.userBalance = 0; // Default
-            user.Cart = new Carts(); // Default empty cart
+            var user = new Users
+            {
+                firstName = userDto.firstName,
+                lastName = userDto.lastName,
+                streetAddress = userDto.streetAddress,
+                city = userDto.city,
+                zipCode = userDto.zipCode,
+                email = userDto.email,
+                username = userDto.username,
+                password = BCrypt.Net.BCrypt.HashPassword(userDto.password),
+                Role = userDto.Role,
+                userBalance = 0,
+                Cart = new Carts()
+            };
 
             await dataContext.Users.AddAsync(user);
             await dataContext.SaveChangesAsync();
@@ -185,7 +197,7 @@ namespace Stockers.API.Controllers
         {
             return dataContext.Users.Any(e => e.ID == id);
         }
-        
+
         public class UpdateUserDto
         {
             public int ID { get; set; }
@@ -224,5 +236,18 @@ namespace Stockers.API.Controllers
             // Return the custom response
             return Ok(response);
         }
+        public class UserSignUpDto
+        {
+            public string firstName { get; set; }
+            public string lastName { get; set; }
+            public string streetAddress { get; set; }
+            public string city { get; set; }
+            public string zipCode { get; set; }
+            public string email { get; set; }
+            public string username { get; set; }
+            public string password { get; set; }
+            public string Role { get; set; }
+        }
+
     }
 }
