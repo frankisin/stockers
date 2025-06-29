@@ -20,10 +20,13 @@ import { usePopover } from '../../../hooks/use-popover';
 import { SecondarySideNav } from './secondary-side-nav';
 import { UserPopover } from './user-popover';
 
+import { useUser } from '../../../hooks/use-user';
+
 
 export function SecondaryNav(): React.JSX.Element {
   const [openNav, setOpenNav] = React.useState<boolean>(false);
   const userPopover = usePopover<HTMLDivElement>();
+  const { user } = useUser(); // 👈 Grab the user object
 
   return (
     <React.Fragment>
@@ -47,17 +50,12 @@ export function SecondaryNav(): React.JSX.Element {
             px: 2,
           }}
         >
-          {/* Left side: Logo + mobile toggle + search + portfolio */}
+          {/* Left side */}
           <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-            {/* Mobile Menu Toggle */}
-            <IconButton
-              onClick={() => setOpenNav(true)}
-              sx={{ display: { lg: 'none' } }}
-            >
+            <IconButton onClick={() => setOpenNav(true)} sx={{ display: { lg: 'none' } }}>
               <ListIcon />
             </IconButton>
 
-            {/* Logo */}
             <Typography
               variant="h6"
               sx={{
@@ -70,58 +68,64 @@ export function SecondaryNav(): React.JSX.Element {
               Stockers
             </Typography>
 
-            {/* Search Icon */}
             <Tooltip title="Search">
               <IconButton>
                 <MagnifyingGlassIcon />
               </IconButton>
             </Tooltip>
-
-            {/* Portfolio Link */}
-
           </Stack>
 
-          {/* Right side: User tools + Auth links */}
+          {/* Right side */}
           <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-            {/* Auth links (hide on mobile) */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
-              <Button component={Link} to="/login" variant="text">
-                Log In
-              </Button>
-              <Button component={Link} to="/register" variant="contained">
-                Register
-              </Button>
-            </Box>
+            {user ? (
+              // Logged-in view: show notifications + avatar
+              <>
+                <Button
+                  component={Link}
+                  to="/portfolio"
+                  variant="outlined"
+                  sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
+                >
+                  My Portfolio
+                </Button>
+                <Tooltip title="Notifications">
+                  <Badge badgeContent={4} color="success" variant="dot">
+                    <IconButton>
+                      <BellIcon />
+                    </IconButton>
+                  </Badge>
+                </Tooltip>
 
-            {/* Icons */}
-            <Tooltip title="Notifications">
-              <Badge badgeContent={4} color="success" variant="dot">
-                <IconButton>
-                  <BellIcon />
-                </IconButton>
-              </Badge>
-            </Tooltip>
-
-            {/* Avatar */}
-            <Avatar
-              onClick={userPopover.handleOpen}
-              ref={userPopover.anchorRef}
-              src="/assets/avatar.png"
-              sx={{ cursor: 'pointer' }}
-            />
+                <Avatar
+                  onClick={userPopover.handleOpen}
+                  ref={userPopover.anchorRef}
+                  src="/assets/avatar.png"
+                  sx={{ cursor: 'pointer' }}
+                />
+              </>
+            ) : (
+              // Not logged in: show login/register buttons
+              <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+                <Button component={Link} to="/login" variant="text">
+                  Log In
+                </Button>
+                <Button component={Link} to="/register" variant="contained">
+                  Register
+                </Button>
+              </Box>
+            )}
           </Stack>
         </Stack>
       </Box>
 
-      {/* Popovers & Mobile Nav */}
+      {/* Popover + Mobile Nav */}
       <UserPopover
         anchorEl={userPopover.anchorRef.current}
         onClose={userPopover.handleClose}
         open={userPopover.open}
       />
       <SecondarySideNav open={openNav} onClose={() => setOpenNav(false)} />
-
-
     </React.Fragment>
   );
 }
+
