@@ -16,10 +16,10 @@ import { EyeSlashIcon } from '@phosphor-icons/react/dist/ssr/EyeSlash';
 import { Controller, useForm } from 'react-hook-form';
 import { z as zod } from 'zod';
 
-import { paths } from '../../paths';
+import { AuthService } from '../../services/AuthServices';
 import { authClient } from '../../lib/auth/client';
+import { paths } from '../../paths';
 import { useUser } from '../../hooks/use-user';
-
 
 const schema = zod.object({
   email: zod.string().min(1, { message: 'Email is required' }).email(),
@@ -28,17 +28,16 @@ const schema = zod.object({
 
 type Values = zod.infer<typeof schema>;
 
-const defaultValues = { email: 'sofia@devias.io', password: 'Secret1' } satisfies Values;
+const defaultValues = {
+  email: 'sofia@devias.io',
+  password: 'Secret1',
+} satisfies Values;
 
 export function SignInForm(): React.JSX.Element {
-
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
-
-  const { checkSession } = useUser();
-
-  const [showPassword, setShowPassword] = React.useState<boolean>();
-
+  const [showPassword, setShowPassword] = React.useState<boolean>(false);
   const [isPending, setIsPending] = React.useState<boolean>(false);
 
   const {
@@ -52,24 +51,34 @@ export function SignInForm(): React.JSX.Element {
     async (values: Values): Promise<void> => {
       setIsPending(true);
 
-      const { error } = await authClient.signInWithPassword(values);
+      try {
+        const result = await AuthService.login(values.email, values.password);
+        console.log('Result in service: ',result);
 
-      if (error) {
-        setError('root', { type: 'server', message: error });
+        if (result.Token) {
+          localStorage.setItem('token', result.Token);
+
+          const profile = await authClient.getUser();
+
+          console.log('User profile: ',profile);
+          if (profile.data) {
+            setUser?.(profile.data); //
+          }
+
+          navigate('/dashboard');
+        } else {
+          setError('root', { type: 'server', message: 'Invalid credentials' });
+        }
+      } catch (err: any) {
+        setError('root', {
+          type: 'server',
+          message: err?.toString() || 'Unexpected error',
+        });
+      } finally {
         setIsPending(false);
-        return;
       }
-
-      // Refresh the auth state
-      await checkSession?.();
-
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      //router.refresh();
-      navigate('/dashboard'); // or your target route
-
     },
-    [checkSession, setError]
+    [setUser, navigate, setError]
   );
 
   return (
@@ -83,6 +92,7 @@ export function SignInForm(): React.JSX.Element {
           </Link>
         </Typography>
       </Stack>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <Controller
@@ -92,7 +102,9 @@ export function SignInForm(): React.JSX.Element {
               <FormControl error={Boolean(errors.email)}>
                 <InputLabel>Email address</InputLabel>
                 <OutlinedInput {...field} label="Email address" type="email" />
-                {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
+                {errors.email && (
+                  <FormHelperText>{errors.email.message}</FormHelperText>
+                )}
               </FormControl>
             )}
           />
@@ -109,24 +121,22 @@ export function SignInForm(): React.JSX.Element {
                       <EyeIcon
                         cursor="pointer"
                         fontSize="var(--icon-fontSize-md)"
-                        onClick={(): void => {
-                          setShowPassword(false);
-                        }}
+                        onClick={() => setShowPassword(false)}
                       />
                     ) : (
                       <EyeSlashIcon
                         cursor="pointer"
                         fontSize="var(--icon-fontSize-md)"
-                        onClick={(): void => {
-                          setShowPassword(true);
-                        }}
+                        onClick={() => setShowPassword(true)}
                       />
                     )
                   }
                   label="Password"
                   type={showPassword ? 'text' : 'password'}
                 />
-                {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
+                {errors.password && (
+                  <FormHelperText>{errors.password.message}</FormHelperText>
+                )}
               </FormControl>
             )}
           />
@@ -135,12 +145,13 @@ export function SignInForm(): React.JSX.Element {
               Forgot password?
             </Link>
           </div>
-          {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
+          {errors.root && <Alert color="error">{errors.root.message}</Alert>}
           <Button disabled={isPending} type="submit" variant="contained">
             Sign in
           </Button>
         </Stack>
       </form>
+
       <Alert color="warning">
         Use{' '}
         <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
