@@ -80,6 +80,7 @@ app.Use(async (context, next) =>
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseDeveloperExceptionPage(); // only in development
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
