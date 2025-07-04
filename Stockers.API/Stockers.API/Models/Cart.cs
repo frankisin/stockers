@@ -4,26 +4,16 @@ using System.Text.Json.Serialization;
 
 namespace Stockers.API.Models
 {
+
     public class Carts
     {
         [Key]
         public int ID { get; set; }
 
-        [ForeignKey("User")]
-        public int UserID { get; set; }
-
-        [JsonIgnore]
-        public Users User { get; set; }
-
-        // Collection of items in the cart
-        public List<CartItem> CartItems { get; set; }
-
-        public Carts()
-        {
-            CartItems = new List<CartItem>();
-        }
-        
+        public int UserID { get; set; } // Just a scalar now
     }
+
+
     //Data Transfer Object (DTO) for Payment requests and response...
     public class PaymentRequest
     {

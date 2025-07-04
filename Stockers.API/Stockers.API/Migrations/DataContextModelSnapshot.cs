@@ -26,7 +26,8 @@ namespace Stockers.API.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
@@ -41,18 +42,15 @@ namespace Stockers.API.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CartID");
-
-                    b.HasIndex("ProductID");
-
-                    b.ToTable("CartItems");
+                    b.ToTable("cartitems", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.Carts", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
@@ -61,10 +59,7 @@ namespace Stockers.API.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("UserID")
-                        .IsUnique();
-
-                    b.ToTable("Carts");
+                    b.ToTable("carts", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.CasinoTransaction", b =>
@@ -251,7 +246,8 @@ namespace Stockers.API.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
@@ -303,7 +299,7 @@ namespace Stockers.API.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Products");
+                    b.ToTable("products", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.ShippingAddress", b =>
@@ -380,7 +376,8 @@ namespace Stockers.API.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
@@ -425,37 +422,7 @@ namespace Stockers.API.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Stockers.API.Models.CartItem", b =>
-                {
-                    b.HasOne("Stockers.API.Models.Carts", "Cart")
-                        .WithMany("CartItems")
-                        .HasForeignKey("CartID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Stockers.API.Models.Products", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Stockers.API.Models.Carts", b =>
-                {
-                    b.HasOne("Stockers.API.Models.Users", "User")
-                        .WithOne("Cart")
-                        .HasForeignKey("Stockers.API.Models.Carts", "UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.CasinoTransaction", b =>
@@ -521,20 +488,9 @@ namespace Stockers.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Stockers.API.Models.Carts", b =>
-                {
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("Stockers.API.Models.Invoice", b =>
                 {
                     b.Navigation("InvoiceItems");
-                });
-
-            modelBuilder.Entity("Stockers.API.Models.Users", b =>
-                {
-                    b.Navigation("Cart")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

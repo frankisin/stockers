@@ -67,53 +67,65 @@ namespace Stockers.API.Controllers
         [HttpGet("{ID}")]
         public async Task<ActionResult<Users>> GetUser(int ID)
         {
-            var user = await dataContext.Users
-                .Include(u => u.Cart)
-                    .ThenInclude(c => c.CartItems)  // Include CartItems within Cart
-                .FirstOrDefaultAsync(u => u.ID == ID);
-
+            var user = await dataContext.Users.FirstOrDefaultAsync(u => u.ID == ID);
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            // If the user doesn't have a cart, create one
-            if (user.Cart == null)
+            // Ensure the user has a cart
+            var existingCart = await dataContext.Carts.FirstOrDefaultAsync(c => c.UserID == user.ID);
+            if (existingCart == null)
             {
                 var newCart = new Carts { UserID = user.ID };
                 dataContext.Carts.Add(newCart);
                 await dataContext.SaveChangesAsync();
-                user.Cart = newCart;
             }
 
             return user;
         }
+
         [HttpGet("ByUsername/{username}/Cart")]
-        public async Task<ActionResult<Users>> GetUserCart(string username)
+        public async Task<IActionResult> GetUserCart(string username)
         {
-            var user = await dataContext.Users
-                .Include(u => u.Cart)
-                    .ThenInclude(c => c.CartItems)  // Include CartItems within Cart
-                        .ThenInclude(ci => ci.Product)  // Include Product details within CartItems
-                .FirstOrDefaultAsync(u => u.username == username);
-
+            var user = await dataContext.Users.FirstOrDefaultAsync(u => u.username == username);
             if (user == null)
-            {
                 return NotFound();
-            }
 
-            // If the user doesn't have a cart, create one
-            if (user.Cart == null)
+            // Find or create user's cart
+            var cart = await dataContext.Carts.FirstOrDefaultAsync(c => c.UserID == user.ID);
+            if (cart == null)
             {
-                var newCart = new Carts { UserID = user.ID };
-                dataContext.Carts.Add(newCart);
+                cart = new Carts { UserID = user.ID };
+                dataContext.Carts.Add(cart);
                 await dataContext.SaveChangesAsync();
-                user.Cart = newCart;
             }
 
-            return user;
+            // Load cart items + products manually
+            var cartItems = await dataContext.CartItems
+                .Where(ci => ci.CartID == cart.ID)
+                .Join(dataContext.Products,
+                    ci => ci.ProductID,
+                    p => p.ID,
+                    (ci, p) => new
+                    {
+                        ci.ID,
+                        ci.Quantity,
+                        ci.ProductID,
+                        Product = p
+                    })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                User = user,
+                Cart = new
+                {
+                    cart.ID,
+                    cart.UserID,
+                    CartItems = cartItems
+                }
+            });
         }
-        // API Call to add a new user entry...(CREATE)
+
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] UserSignUpDto userDto)
         {
@@ -128,33 +140,30 @@ namespace Stockers.API.Controllers
                 username = userDto.username,
                 password = BCrypt.Net.BCrypt.HashPassword(userDto.password),
                 Role = userDto.Role,
-                userBalance = 0,
-                Cart = new Carts()
+                userBalance = 0
             };
 
             await dataContext.Users.AddAsync(user);
             await dataContext.SaveChangesAsync();
 
+            // Then create the cart
+            var cart = new Carts { UserID = user.ID };
+            dataContext.Carts.Add(cart);
+            await dataContext.SaveChangesAsync();
+
             return CreatedAtAction(nameof(AddUser), user);
         }
-
 
         [HttpPut]
         public async Task<IActionResult> PutUser(UpdateUserDto userDto)
         {
             if (userDto == null)
-            {
                 return BadRequest("Invalid user data");
-            }
 
             var existingUser = await dataContext.Users.FindAsync(userDto.ID);
-
             if (existingUser == null)
-            {
-                return NotFound(); // Or handle the case where the user with the specified ID is not found
-            }
+                return NotFound();
 
-            // Update the properties of the existing user with the values from the DTO
             existingUser.firstName = userDto.firstName;
             existingUser.lastName = userDto.lastName;
             existingUser.streetAddress = userDto.streetAddress;
@@ -165,30 +174,13 @@ namespace Stockers.API.Controllers
             existingUser.password = userDto.password;
             existingUser.Role = userDto.Role;
 
-            try
-            {
-                await dataContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                // Handle concurrency exception if needed
-                throw;
-            }
+            await dataContext.SaveChangesAsync();
 
-            // Fetch the updated data from the database, including associated carts
-            var updatedUser = await dataContext.Users
-                .Include(u => u.Cart) // Ensure Cart is included in the query
-                .FirstOrDefaultAsync(u => u.ID == existingUser.ID);
-
-            // You can create a custom response object or use an anonymous object
-            var response = new
+            return Ok(new
             {
                 Message = "Record Updated successfully",
-                UpdatedData = updatedUser
-            };
-
-            // Return the custom response
-            return Ok(response);
+                UpdatedData = existingUser
+            });
         }
 
 

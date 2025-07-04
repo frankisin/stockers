@@ -119,115 +119,69 @@ namespace Stockers.API.Controllers
         [HttpDelete("{username}/cartitems/{itemId}")]
         public async Task<IActionResult> DeleteCartItem(string username, int itemId)
         {
-            // Fetch the user based on the username
-            var user = await _context.Users
-                .Include(u => u.Cart)
-                .ThenInclude(c => c.CartItems)
-                .FirstOrDefaultAsync(u => u.username == username);
-
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
             if (user == null)
-            {
                 return NotFound($"User with username {username} not found");
-            }
 
-            // Fetch the cart item to delete
-            var cartItemToDelete = user.Cart.CartItems.FirstOrDefault(ci => ci.ID == itemId);
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserID == user.ID);
+            if (cart == null)
+                return NotFound($"Cart not found for user {username}");
 
-            if (cartItemToDelete == null)
-            {
-                return NotFound($"Cart item with ID {itemId} not found in the user's cart");
-            }
+            var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci => ci.ID == itemId && ci.CartID == cart.ID);
+            if (cartItem == null)
+                return NotFound($"Cart item with ID {itemId} not found in user's cart");
 
-            // Remove the cart item from the collection
-            user.Cart.CartItems.Remove(cartItemToDelete);
-
-            // Save changes to the database
+            _context.CartItems.Remove(cartItem);
             await _context.SaveChangesAsync();
 
-            // Return the updated user cart
-            var updatedUserCart = await _context.Users
-                .Include(u => u.Cart)
-                .ThenInclude(c => c.CartItems)
-                .FirstOrDefaultAsync(u => u.username == username);
-
-            return Ok(updatedUserCart);
+            var updatedItems = await _context.CartItems.Where(ci => ci.CartID == cart.ID).ToListAsync();
+            return Ok(updatedItems);
         }
+
         [HttpPost("{username}/cart/AddToCart")]
-        public async Task<IActionResult> AddToCart(string username, [FromBody] CartItemRequest addToCartPayload)
+        public async Task<IActionResult> AddToCart(string username, [FromBody] CartItemRequest payload)
         {
-            // Validate input as needed
-
-            // Fetch the user based on the username
-            var user = await _context.Users
-                .Include(u => u.Cart)
-                .ThenInclude(c => c.CartItems)
-                .FirstOrDefaultAsync(u => u.username == username);
-
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.username == username);
             if (user == null)
-            {
-                // Handle the case where the user is not found
                 return NotFound($"User with username {username} not found");
+
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserID == user.ID);
+            if (cart == null)
+            {
+                cart = new Carts { UserID = user.ID };
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();  // to generate cart ID
             }
 
-            // Fetch the product based on the provided ProductID
-            var product = await _context.Products.FindAsync(addToCartPayload.ProductID);
-
+            var product = await _context.Products.FindAsync(payload.ProductID);
             if (product == null)
-            {
-                // Handle the case where the product is not found
-                return NotFound($"Product with ID {addToCartPayload.ProductID} not found");
-            }
+                return NotFound($"Product with ID {payload.ProductID} not found");
 
-            // Check if the same product already exists in the user's cart
-            var existingCartItem = user.Cart.CartItems.FirstOrDefault(ci => ci.ProductID == addToCartPayload.ProductID);
+            var existingItem = await _context.CartItems
+                .FirstOrDefaultAsync(ci => ci.CartID == cart.ID && ci.ProductID == payload.ProductID);
 
-            if (existingCartItem != null)
+            if (existingItem != null)
             {
-                // If the product already exists, update the quantity
-                existingCartItem.Quantity += addToCartPayload.Quantity;
+                existingItem.Quantity += payload.Quantity;
             }
             else
             {
-                // If the product does not exist, create a new CartItem entity
-                var newCartItem = new CartItem
+                var newItem = new CartItem
                 {
-                    Quantity = addToCartPayload.Quantity,
-                    CartID = addToCartPayload.CartID,
-                    ProductID = addToCartPayload.ProductID,
-                    // Assuming CartItem has a navigation property for Product
-                    Product = product
+                    Quantity = payload.Quantity,
+                    CartID = cart.ID,
+                    ProductID = payload.ProductID
                 };
-
-                // Add the new CartItem to the CartItems collection within the Cart
-                try
-                {
-                    user.Cart.CartItems.Add(newCartItem);
-                }
-                catch(Exception ex)
-                {
-                    Exception exemption = ex;
-                    return BadRequest(new { message = ex.Message });
-                }
-                
-            }
-            try
-            {
-                var result = await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                Exception exemption = ex;
-                return BadRequest(new { message = ex.Message });
+                _context.CartItems.Add(newItem);
             }
 
-            // Return the updated user cart
-            var updatedUserCart = await _context.Users
-                .Include(u => u.Cart)
-                .ThenInclude(c => c.CartItems)
-                .FirstOrDefaultAsync(u => u.username == username);
+            await _context.SaveChangesAsync();
 
-            return Ok(updatedUserCart);
+            var updatedItems = await _context.CartItems.Where(ci => ci.CartID == cart.ID).ToListAsync();
+            return Ok(updatedItems);
         }
+
+     
         [HttpPut("{cartId}/cartitems/{itemId}")]
         public async Task<IActionResult> UpdateCartItem(int cartId, int itemId, CartItem updatedCartItem)
         {
@@ -261,105 +215,97 @@ namespace Stockers.API.Controllers
         public async Task<IActionResult> Checkout(CheckoutModel model)
         {
             var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            int userId;
+            if (!int.TryParse(userIdClaim, out int userId) || userId != model.UserId)
+                return Unauthorized("Invalid user ID or mismatch.");
 
-            if (int.TryParse(userIdClaim, out userId) && userId != model.UserId)
-            { 
-                // Handle the case where the user ID is not valid or does not match
-                return Unauthorized("Invalid user ID or user ID does not match.");
-            }
-
-            // Attempt to retrieve the user's active cart
-            var cart = await _context.Carts
-                                     .Include(c => c.CartItems)
-                                     .ThenInclude(ci => ci.Product)  // Assuming you want product details too
-                                     .FirstOrDefaultAsync(c => c.UserID == model.UserId);
-
+            // Get cart for user
+            var cart = await _context.Carts.FirstOrDefaultAsync(c => c.UserID == model.UserId);
             if (cart == null)
-            {
                 return NotFound(new { Message = "No active cart found for this user." });
+
+            // Get cart items
+            var cartItems = await _context.CartItems
+                .Where(ci => ci.CartID == cart.ID)
+                .ToListAsync();
+
+            if (cartItems.Count == 0)
+                return BadRequest(new { Message = "Cart is empty." });
+
+            // Fetch related products
+            var productIds = cartItems.Select(ci => ci.ProductID).Distinct().ToList();
+            var products = await _context.Products
+                .Where(p => productIds.Contains(p.ID))
+                .ToDictionaryAsync(p => p.ID);
+
+            // Calculate total
+            decimal totalAmount = 0;
+            foreach (var item in cartItems)
+            {
+                if (!products.TryGetValue(item.ProductID, out var product))
+                    return BadRequest($"Product with ID {item.ProductID} not found.");
+
+                totalAmount += item.Quantity * product.Price;
             }
 
-            // Now construct the payment request
-            PaymentRequest paymentRequest = new PaymentRequest
+            // Process payment (mocked)
+            var paymentRequest = new PaymentRequest
             {
                 CardNumber = model.CardNumber,
                 CardExpiry = model.CardExpiry,
                 Cvv = model.Cvv,
-                Amount = cart.CartItems.Sum(item => item.Quantity * item.Product.Price)  // Recalculate to prevent tampering
+                Amount = totalAmount
             };
 
-            //For future reference, the next PaymentResponse would be pointing to a service with an actual payment provider
-            //Then we would read its response and act accordingly. 
-
-            // Process the payment
-            PaymentResponse paymentResponse = new MockPaymentService().ProcessPayment(paymentRequest);
-
-            if (paymentResponse.IsSuccess)
-            {
-                // Construct a new invoice
-                Invoice newInvoice = new Invoice
-                {
-                    UserID = model.UserId,
-                    InvoiceDate = DateTime.Now,
-                    TotalAmount = cart.CartItems.Sum(item => item.Quantity * item.Product.Price),
-                    InvoiceNumber = GenerateInvoiceNumber(),
-                    PaymentStatus = "Paid",
-                    TransactionId = paymentResponse.TransactionId,
-                    InvoiceItems = cart.CartItems.Select(item => new InvoiceItem
-                    {
-                        ProductID = item.ProductID,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.Product.Price
-                    }).ToList()
-                };
-
-                // Save the new invoice first to ensure the InvoiceID is generated
-                _context.Invoices.Add(newInvoice);
-                await _context.SaveChangesAsync();  // Save here to generate the InvoiceID
-
-                // Now that the InvoiceID is available, log each transaction
-                foreach (var cartItem in cart.CartItems)
-                {
-                    // Fetch the product from the database to update its InStock value
-                    var product = await _context.Products.FindAsync(cartItem.ProductID);
-                    if (product != null)
-                    {
-                        // Reduce the stock by the quantity purchased
-                        product.InStock -= cartItem.Quantity;
-
-                        // Update the product stock in the database
-                        _context.Products.Update(product);
-                    }
-
-                    var transaction = new Transaction
-                    {
-                        ProductID = cartItem.ProductID,
-                        QuantityChange = -cartItem.Quantity,
-                        TransactionType = "SALE",
-                        TransactionDate = DateTime.Now,
-                        InvoiceID = newInvoice.InvoiceID  // Use the saved InvoiceID
-                    };
-
-                    _context.Transactions.Add(transaction);
-                }
-
-                // Save the transactions to the database
-                await _context.SaveChangesAsync();
-
-                // Clear the cart items after successful checkout
-                _context.CartItems.RemoveRange(cart.CartItems);
-
-                // Save the changes to empty the cart
-                await _context.SaveChangesAsync();
-
-                return Ok(new { Message = "Payment and invoice processed successfully", Invoice = newInvoice });
-            }
-            else
+            var paymentResponse = new MockPaymentService().ProcessPayment(paymentRequest);
+            if (!paymentResponse.IsSuccess)
             {
                 return BadRequest(new { Message = "Payment Failed", Error = paymentResponse.ErrorMessage });
             }
 
+            // Create invoice
+            var invoice = new Invoice
+            {
+                UserID = model.UserId,
+                InvoiceDate = DateTime.Now,
+                TotalAmount = totalAmount,
+                InvoiceNumber = GenerateInvoiceNumber(),
+                PaymentStatus = "Paid",
+                TransactionId = paymentResponse.TransactionId,
+                InvoiceItems = cartItems.Select(ci => new InvoiceItem
+                {
+                    ProductID = ci.ProductID,
+                    Quantity = ci.Quantity,
+                    UnitPrice = products[ci.ProductID].Price
+                }).ToList()
+            };
+
+            _context.Invoices.Add(invoice);
+            await _context.SaveChangesAsync(); // Generate InvoiceID
+
+            // Log transactions and update stock
+            foreach (var item in cartItems)
+            {
+                var product = products[item.ProductID];
+                product.InStock -= item.Quantity;
+                _context.Products.Update(product);
+
+                _context.Transactions.Add(new Transaction
+                {
+                    ProductID = item.ProductID,
+                    QuantityChange = -item.Quantity,
+                    TransactionType = "SALE",
+                    TransactionDate = DateTime.Now,
+                    InvoiceID = invoice.InvoiceID
+                });
+            }
+
+            await _context.SaveChangesAsync();
+
+            // Clear cart
+            _context.CartItems.RemoveRange(cartItems);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Checkout complete", Invoice = invoice });
         }
 
         private string GenerateInvoiceNumber()

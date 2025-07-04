@@ -25,23 +25,24 @@ namespace Stockers.API.Helpers
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // One-to-One relationship between Users and Carts
-            modelBuilder.Entity<Users>()
-                .HasOne(u => u.Cart)          // One User has one Cart
-                .WithOne(c => c.User)         // One Cart belongs to one User
-                .HasForeignKey<Carts>(c => c.UserID); // Foreign key in Carts referencing Users
-                               
-            modelBuilder.Entity<Users>()
-            .Property(u => u.ID)
-            .UseIdentityByDefaultColumn();
-            // One-to-Many relationship between Carts and CartItems
-            modelBuilder.Entity<Carts>()
-                .HasMany(c => c.CartItems)    // One Cart has many CartItems
-                .WithOne(ci => ci.Cart)       // One CartItem belongs to one Cart
-                .HasForeignKey(ci => ci.CartID) // Foreign key in CartItems referencing Carts
-                .IsRequired();
+               modelBuilder.Entity<Users>()
+                    .ToTable("users")
+                    .Property(u => u.ID)
+                    .HasColumnName("id");
 
-            // Add other configurations if needed
+                modelBuilder.Entity<Products>()
+                    .ToTable("products")
+                    .Property(p => p.ID).HasColumnName("id");
+
+                modelBuilder.Entity<Carts>()
+                    .ToTable("carts")
+                    .Property(c => c.ID).HasColumnName("id");
+
+                modelBuilder.Entity<CartItem>()
+                    .ToTable("cartitems")
+                    .Property(ci => ci.ID).HasColumnName("id");
+
+
 
             base.OnModelCreating(modelBuilder);
         }

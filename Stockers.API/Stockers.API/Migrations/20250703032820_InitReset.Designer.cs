@@ -12,8 +12,8 @@ using Stockers.API.Helpers;
 namespace Stockers.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20250629041621_InitUsersFix")]
-    partial class InitUsersFix
+    [Migration("20250703032820_InitReset")]
+    partial class InitReset
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,18 +29,22 @@ namespace Stockers.API.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int>("CartID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("cartid");
 
                     b.Property<int>("ProductID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("productid");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
 
                     b.HasKey("ID");
 
@@ -48,26 +52,28 @@ namespace Stockers.API.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("cartitems", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.Carts", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
                     b.Property<int>("UserID")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("userid");
 
                     b.HasKey("ID");
 
                     b.HasIndex("UserID")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("carts", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.CasinoTransaction", b =>
@@ -254,7 +260,8 @@ namespace Stockers.API.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("ID");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
@@ -306,7 +313,7 @@ namespace Stockers.API.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.ShippingAddress", b =>
@@ -383,7 +390,8 @@ namespace Stockers.API.Migrations
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ID"));
 
@@ -428,7 +436,7 @@ namespace Stockers.API.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("Stockers.API.Models.CartItem", b =>
@@ -437,13 +445,15 @@ namespace Stockers.API.Migrations
                         .WithMany("CartItems")
                         .HasForeignKey("CartID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_cart");
 
                     b.HasOne("Stockers.API.Models.Products", "Product")
                         .WithMany()
                         .HasForeignKey("ProductID")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("fk_product");
 
                     b.Navigation("Cart");
 

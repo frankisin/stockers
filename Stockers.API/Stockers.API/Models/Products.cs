@@ -16,6 +16,8 @@
         public string AverageRating { get; set; }
         public string ImageUrlDetail { get; set; }
 
+        public Products() { }
+
         public Products(int ID, string Title, string Weight, string Description, decimal Price, string Type, string ImageUrl,
                         string ProdStatus, string ProdFrag, string DescriptionLong,
                         int InStock, string AverageRating, string ImageUrlDetail)
@@ -36,5 +38,3 @@
         }
     }
 }
-
-

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Stockers.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitReset : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -74,10 +74,10 @@ namespace Stockers.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "users",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     firstName = table.Column<string>(type: "text", nullable: false),
                     lastName = table.Column<string>(type: "text", nullable: false),
@@ -92,25 +92,25 @@ namespace Stockers.API.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.ID);
+                    table.PrimaryKey("PK_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Carts",
+                name: "carts",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserID = table.Column<int>(type: "integer", nullable: false)
+                    userid = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Carts", x => x.ID);
+                    table.PrimaryKey("PK_carts", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Carts_Users_UserID",
-                        column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        name: "FK_carts_users_userid",
+                        column: x => x.userid,
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -132,10 +132,10 @@ namespace Stockers.API.Migrations
                 {
                     table.PrimaryKey("PK_CasinoTransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CasinoTransactions_Users_UserId",
+                        name: "FK_CasinoTransactions_users_UserId",
                         column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -156,10 +156,10 @@ namespace Stockers.API.Migrations
                 {
                     table.PrimaryKey("PK_Invoices", x => x.InvoiceID);
                     table.ForeignKey(
-                        name: "FK_Invoices_Users_UserID",
+                        name: "FK_Invoices_users_UserID",
                         column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -180,10 +180,10 @@ namespace Stockers.API.Migrations
                 {
                     table.PrimaryKey("PK_PaymentMethods", x => x.PaymentMethodID);
                     table.ForeignKey(
-                        name: "FK_PaymentMethods_Users_UserID",
+                        name: "FK_PaymentMethods_users_UserID",
                         column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -204,35 +204,35 @@ namespace Stockers.API.Migrations
                 {
                     table.PrimaryKey("PK_ShippingAddresses", x => x.ShippingAddressID);
                     table.ForeignKey(
-                        name: "FK_ShippingAddresses_Users_UserID",
+                        name: "FK_ShippingAddresses_users_UserID",
                         column: x => x.UserID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CartItems",
+                name: "cartitems",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Quantity = table.Column<int>(type: "integer", nullable: false),
-                    CartID = table.Column<int>(type: "integer", nullable: false),
-                    ProductID = table.Column<int>(type: "integer", nullable: false)
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    cartid = table.Column<int>(type: "integer", nullable: false),
+                    productid = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CartItems", x => x.ID);
+                    table.PrimaryKey("PK_cartitems", x => x.id);
                     table.ForeignKey(
-                        name: "FK_CartItems_Carts_CartID",
-                        column: x => x.CartID,
-                        principalTable: "Carts",
-                        principalColumn: "ID",
+                        name: "fk_cart",
+                        column: x => x.cartid,
+                        principalTable: "carts",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CartItems_Products_ProductID",
-                        column: x => x.ProductID,
+                        name: "fk_product",
+                        column: x => x.productid,
                         principalTable: "Products",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -267,19 +267,19 @@ namespace Stockers.API.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItems_CartID",
-                table: "CartItems",
-                column: "CartID");
+                name: "IX_cartitems_cartid",
+                table: "cartitems",
+                column: "cartid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CartItems_ProductID",
-                table: "CartItems",
-                column: "ProductID");
+                name: "IX_cartitems_productid",
+                table: "cartitems",
+                column: "productid");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Carts_UserID",
-                table: "Carts",
-                column: "UserID",
+                name: "IX_carts_userid",
+                table: "carts",
+                column: "userid",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -320,7 +320,7 @@ namespace Stockers.API.Migrations
                 name: "Access");
 
             migrationBuilder.DropTable(
-                name: "CartItems");
+                name: "cartitems");
 
             migrationBuilder.DropTable(
                 name: "CasinoTransactions");
@@ -338,7 +338,7 @@ namespace Stockers.API.Migrations
                 name: "Transactions");
 
             migrationBuilder.DropTable(
-                name: "Carts");
+                name: "carts");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
@@ -347,7 +347,7 @@ namespace Stockers.API.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "users");
         }
     }
 }
