@@ -12,6 +12,7 @@ import { config } from '../../../config';
 import { CustomersFilters } from '../../../components/dashboard/customer/customers-filters';
 import { CustomersTable } from '../../../components/dashboard/customer/customers-table';
 import type { Customer } from '../../../components/dashboard/customer/customers-table';
+import Layout from '../layout';
 
 export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
 
@@ -109,14 +110,15 @@ const customers = [
   },
 ] satisfies Customer[];
 
-export default function Page(): React.JSX.Element {
+export default function Customers(): React.JSX.Element {
   const page = 0;
   const rowsPerPage = 5;
 
   const paginatedCustomers = applyPagination(customers, page, rowsPerPage);
 
   return (
-    <Stack spacing={3}>
+    <Layout>
+          <Stack spacing={3}>
       <Stack direction="row" spacing={3}>
         <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
           <Typography variant="h4">Customers</Typography>
@@ -143,6 +145,8 @@ export default function Page(): React.JSX.Element {
         rowsPerPage={rowsPerPage}
       />
     </Stack>
+    </Layout>
+
   );
 }
 

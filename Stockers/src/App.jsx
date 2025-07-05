@@ -10,6 +10,10 @@ import Register from './app/auth/sign-up/page';
 import './App.css'; 
 import './styles/global.css'; 
 import Portfolio from './app/portfolio/page';
+import Settings from './app/dashboard/settings/page';
+import Account from './app/dashboard/account/page';
+import Customers from './app/dashboard/customers/page';
+import NotFound from './app/errors/not-found/page';
 
 const theme = createTheme(); // Use Devias MUI theme generator
 
@@ -30,7 +34,11 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/portfolio" element = {<Portfolio/>}/>
+            <Route path="/settings" element = {<Settings/>}/>
             <Route path="/register" element={<Register />} />
+            <Route path="/account" element={<Account/>}/>
+            <Route path="/customers" element={<Customers/>}/>
+            <Route path="/errors/not-found" element={<NotFound/>}/>
           </Routes>
         </main>
       </div>

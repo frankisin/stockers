@@ -70,7 +70,7 @@ export function SignUpForm(): React.JSX.Element {
           city: 'N/A',
           zipCode: '00000',
           Role: 'user',
-          userBalance: 0
+          userBalance: 0.00
         };
         
 

@@ -7,12 +7,14 @@ import Typography from '@mui/material/Typography';
 import { config } from '../../../config';
 import { AccountDetailsForm } from '../../../components/dashboard/account/account-details-form';
 import { AccountInfo } from '../../../components/dashboard/account/account-info';
+import Layout from '../layout';
 
 export const metadata = { title: `Account | Dashboard | ${config.site.name}` } satisfies Metadata;
 
-export default function Page(): React.JSX.Element {
+export default function Account(): React.JSX.Element {
   return (
-    <Stack spacing={3}>
+    <Layout>
+          <Stack spacing={3}>
       <div>
         <Typography variant="h4">Account</Typography>
       </div>
@@ -37,5 +39,7 @@ export default function Page(): React.JSX.Element {
         </Grid>
       </Grid>
     </Stack>
+    </Layout>
+
   );
 }
