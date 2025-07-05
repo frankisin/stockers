@@ -19,6 +19,7 @@ import { z as zod } from 'zod';
 
 import { paths } from '../../paths';
 import { authClient } from '../../lib/auth/client';
+import { AuthService } from '../../services/AuthServices';
 import { useUser } from '../../hooks/use-user';
 
 const schema = zod.object({
@@ -57,20 +58,34 @@ export function SignUpForm(): React.JSX.Element {
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
       setIsPending(true);
+      try {
+        // Construct the payload
+        const userPayload = {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          username: values.email,
+          password: values.password,
+          streetAddress: 'N/A',
+          city: 'N/A',
+          zipCode: '00000',
+          Role: 'user',
+          userBalance: 0
+        };
+        
 
-      const { error } = await authClient.signUp(values);
+        await AuthService.signUp(userPayload);
 
-      if (error) {
-        setError('root', { type: 'server', message: error });
+        await checkSession?.();
+        navigate(paths.dashboard.overview);
+      } catch (err: any) {
+        setError('root', { type: 'server', message: err.message || 'Sign up failed' });
         setIsPending(false);
-        return;
       }
-
-      await checkSession?.();
-      navigate(paths.dashboard.overview); // Redirect after signup
     },
     [checkSession, navigate, setError]
   );
+
 
   return (
     <Stack spacing={3}>

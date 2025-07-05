@@ -25,5 +25,14 @@ export const AuthService = {
     });
 
     return response.data;
+  },
+  signUp : async (user) => {
+    try{
+      const response = await api.post('/User',user);
+      return response.data;
+    }
+    catch(error){
+      throw error.response?.data?.message || 'Sign up failed';
+    }
   }
 };
