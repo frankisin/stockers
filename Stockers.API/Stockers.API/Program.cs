@@ -29,6 +29,9 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+//Yahoo Finance Service
+builder.Services.AddHttpClient<YahooFinanceService>();
+
 // JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
