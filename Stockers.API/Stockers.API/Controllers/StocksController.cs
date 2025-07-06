@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Stockers.API.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class StocksController : ControllerBase
