@@ -23,9 +23,10 @@ namespace Stockers.API.Controllers
         private readonly YahooFinanceService _yahooService;
         private readonly DataContext _context;
 
-        public StocksController(YahooFinanceService yahooService)
+        public StocksController(YahooFinanceService yahooService,DataContext context)
         {
             _yahooService = yahooService;
+            _context = context;
         }
 
         [HttpGet("search")]
@@ -46,7 +47,7 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, "Failed to fetch stock data");
             }
         }
-        [AllowAnonymous] // Optional: if you want this public
+   
         [HttpGet("supported")]
         public async Task<IActionResult> GetSupportedAssets()
         {
