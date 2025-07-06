@@ -9,7 +9,7 @@ namespace Stockers.API.Models
     public string Exchange { get; set; } = string.Empty;
     public decimal LatestPrice { get; set; }
     public DateTime LastUpdated { get; set; } = DateTime.UtcNow;
-
+    public bool IsPreloaded { get; set; } = false;
     public ICollection<UserAssets> UserAssets { get; set; }
 }
 
