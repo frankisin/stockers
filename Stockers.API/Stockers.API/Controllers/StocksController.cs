@@ -21,6 +21,7 @@ namespace Stockers.API.Controllers
     public class StocksController : ControllerBase
     {
         private readonly YahooFinanceService _yahooService;
+        private readonly DataContext _context;
 
         public StocksController(YahooFinanceService yahooService)
         {
@@ -28,6 +29,7 @@ namespace Stockers.API.Controllers
         }
 
         [HttpGet("search")]
+
         public async Task<IActionResult> Search(string q)
         {
             if (string.IsNullOrWhiteSpace(q))
@@ -44,6 +46,26 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, "Failed to fetch stock data");
             }
         }
+        [AllowAnonymous] // Optional: if you want this public
+        [HttpGet("supported")]
+        public async Task<IActionResult> GetSupportedAssets()
+        {
+            try
+            {
+                var assets = await _context.Assets
+                    .OrderBy(a => a.Symbol)
+                    .ToListAsync();
+
+                return Ok(assets);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error fetching supported assets:", ex.Message);
+                return StatusCode(500, "Failed to fetch supported assets");
+            }
+        }
+
     }
+
 }
 
