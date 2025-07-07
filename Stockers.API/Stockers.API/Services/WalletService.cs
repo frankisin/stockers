@@ -179,23 +179,24 @@ public class WalletService : IWalletService
     }
 
     public async Task<ServiceViewResult<List<UserAssets>>> GetUserWalletAsync(int userId)
-{
-    var result = new ServiceViewResult<List<UserAssets>>();
-
-    try
     {
-        var assets = await _context.UserAssets
-            .Where(x => x.UserId == userId)
-            .ToListAsync();
+        var result = new ServiceViewResult<List<UserAssets>>();
 
-        result.Data = assets;
-    }
-    catch (Exception ex)
-    {
-        result.Notifications.Add(NotificationType.Error, "Error loading wallet.");
-    }
+        try
+        {
+            var walletItems = await _context.UserAssets
+        .Include(ua => ua.Asset) // Include the Asset info
+        .Where(ua => ua.UserId == userId)
+        .ToListAsync();
 
-    return result;
-}
+            result.Data = walletItems;
+        }
+        catch (Exception ex)
+        {
+            result.Notifications.Add(NotificationType.Error, "Error loading wallet.");
+        }
+
+        return result;
+    }
 
 }
