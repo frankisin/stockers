@@ -32,6 +32,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 //Yahoo Finance Service
 builder.Services.AddHttpClient<YahooFinanceService>();
 
+//background service for asset updates..
+builder.Services.AddHostedService<AssetPriceUpdater>();
+
 // JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

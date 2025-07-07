@@ -59,6 +59,8 @@ namespace Stockers.API.Helpers
                 .WithMany(a => a.UserAssets)
                 .HasForeignKey(x => x.AssetId);
 
+            modelBuilder.Entity<Assets>().ToTable("assets");
+
             base.OnModelCreating(modelBuilder);
         }
 
