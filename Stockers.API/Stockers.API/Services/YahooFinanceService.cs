@@ -62,4 +62,43 @@ public class YahooFinanceService
 
         return null;
     }
+
+    public async Task<Dictionary<string, decimal?>> GetBatchQuotesAsync(string symbolsCsv)
+    {
+        var apiKey = _config["YahooFinance:ApiKey"];
+        var baseUrl = _config["YahooFinance:BaseUrl"];
+
+        var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"{baseUrl}/quote?symbols={Uri.EscapeDataString(symbolsCsv)}"
+        );
+        request.Headers.Add("x-api-key", apiKey);
+
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        using var doc = JsonDocument.Parse(content);
+        var results = doc.RootElement.GetProperty("quoteResponse").GetProperty("result");
+
+        var quoteMap = new Dictionary<string, decimal?>();
+
+        foreach (var quote in results.EnumerateArray())
+        {
+            var symbol = quote.GetProperty("symbol").GetString();
+            decimal? price = quote.TryGetProperty("regularMarketPrice", out var priceElem) && 
+                            priceElem.TryGetDecimal(out var parsedPrice)
+                            ? parsedPrice
+                            : null;
+
+            if (!string.IsNullOrEmpty(symbol))
+            {
+                quoteMap[symbol] = price;
+            }
+        }
+
+        return quoteMap;
+    }
+
 }

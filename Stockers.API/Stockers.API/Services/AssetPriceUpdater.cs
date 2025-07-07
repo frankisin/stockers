@@ -24,41 +24,54 @@ public class AssetPriceUpdater : BackgroundService
                 var db = scope.ServiceProvider.GetRequiredService<DataContext>();
                 var assets = await db.Assets.ToListAsync();
 
-                foreach (var asset in assets)
+                // Batch assets into groups of 10 (Yahoo limit)
+                var batchedAssets = assets
+                    .Select((a, i) => new { Asset = a, Index = i })
+                    .GroupBy(x => x.Index / 10)
+                    .Select(g => g.Select(x => x.Asset).ToList())
+                    .ToList();
+
+                foreach (var group in batchedAssets)
                 {
+                    var symbols = string.Join(",", group.Select(a => a.Symbol));
+
                     try
                     {
-                        var price = await _yahooService.GetQuoteAsync(asset.Symbol);
+                        var quotes = await _yahooService.GetBatchQuotesAsync(symbols);
 
-                        if (price.HasValue)
+                        foreach (var asset in group)
                         {
-                            // 1. Update latest price
-                            asset.LatestPrice = price.Value;
-                            asset.LastUpdated = DateTime.UtcNow;
-
-                            // 2. Add price history record
-                            db.AssetPriceHistory.Add(new AssetPriceHistory
+                            if (quotes.TryGetValue(asset.Symbol, out var price) && price.HasValue)
                             {
-                                AssetId = asset.Id,
-                                Price = price.Value,
-                                Timestamp = DateTime.UtcNow
-                            });
+                                asset.LatestPrice = price.Value;
+                                asset.LastUpdated = DateTime.UtcNow;
+
+                                db.AssetPriceHistory.Add(new AssetPriceHistory
+                                {
+                                    AssetId = asset.Id,
+                                    Price = price.Value,
+                                    Timestamp = DateTime.UtcNow
+                                });
+                            }
+                            else
+                            {
+                                _logger.LogWarning($"No price found for {asset.Symbol}");
+                            }
                         }
-                        else
-                        {
-                            _logger.LogWarning($"No price found for {asset.Symbol}");
-                        }
+
+                        // Optional: Delay between batches to avoid throttling
+                        await Task.Delay(200, stoppingToken);
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError($"Failed to update {asset.Symbol}: {ex.Message}");
+                        _logger.LogError($"Batch failed for symbols: {symbols} => {ex.Message}");
                     }
                 }
 
                 await db.SaveChangesAsync();
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(60), stoppingToken);
         }
     }
 }
