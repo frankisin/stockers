@@ -25,6 +25,10 @@ namespace Stockers.API.Helpers
         public DbSet<Assets> Assets { get; set; }
         public DbSet<UserAssets> UserAssets { get; set; }
 
+        public DbSet<AssetPriceHistory> AssetPriceHistory { get; set; }
+        public DbSet<UserPortfolioValue> UserPortfolioValue { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -60,6 +64,19 @@ namespace Stockers.API.Helpers
                 .HasForeignKey(x => x.AssetId);
 
             modelBuilder.Entity<Assets>().ToTable("assets");
+
+            modelBuilder.Entity<AssetPriceHistory>()
+                .ToTable("assetpricehistory")  // lowercase!
+                .HasOne(p => p.Asset)
+                .WithMany(a => a.PriceHistory)
+                .HasForeignKey(p => p.AssetId);
+
+            modelBuilder.Entity<UserPortfolioValue>()
+                .ToTable("userportfoliovalue")  // lowercase!
+                .HasOne(p => p.User)
+                .WithMany(u => u.PortfolioHistory)
+                .HasForeignKey(p => p.UserId);
+
 
             base.OnModelCreating(modelBuilder);
         }

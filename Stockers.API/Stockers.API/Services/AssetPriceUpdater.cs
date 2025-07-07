@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Stockers.API.Helpers;
+using Stockers.API.Models;
 
 public class AssetPriceUpdater : BackgroundService
 {
@@ -31,14 +32,22 @@ public class AssetPriceUpdater : BackgroundService
 
                         if (price.HasValue)
                         {
+                            // 1. Update latest price
                             asset.LatestPrice = price.Value;
                             asset.LastUpdated = DateTime.UtcNow;
+
+                            // 2. Add price history record
+                            db.AssetPriceHistory.Add(new AssetPriceHistory
+                            {
+                                AssetId = asset.Id,
+                                Price = price.Value,
+                                Timestamp = DateTime.UtcNow
+                            });
                         }
                         else
                         {
                             _logger.LogWarning($"No price found for {asset.Symbol}");
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -49,7 +58,7 @@ public class AssetPriceUpdater : BackgroundService
                 await db.SaveChangesAsync();
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken); // Wait 15 min before next run
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
         }
     }
 }

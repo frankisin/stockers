@@ -42,6 +42,9 @@ namespace Stockers.API.Models
 
     public ICollection<UserAssets> UserAssets { get; set; }
 
+    public ICollection<UserPortfolioValue> PortfolioHistory { get; set; }
+
+
     public Users() { }
 
     public Users(string firstName, string lastName, string streetAddress, string city, string zipCode, string email, string username, string password, string Role, decimal userBalance)
