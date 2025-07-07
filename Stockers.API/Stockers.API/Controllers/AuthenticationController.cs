@@ -113,7 +113,8 @@ namespace Stockers.API.Controllers
                     user.streetAddress,
                     user.city,
                     user.zipCode,
-                    user.Role
+                    user.Role,
+                    user.userBalance
                 });
             }
             catch (Exception ex)
