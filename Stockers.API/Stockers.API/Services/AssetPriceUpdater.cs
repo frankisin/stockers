@@ -49,7 +49,7 @@ public class AssetPriceUpdater : BackgroundService
                 await db.SaveChangesAsync();
             }
 
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); // Wait 1 min before next run
+            await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken); // Wait 15 min before next run
         }
     }
 }
