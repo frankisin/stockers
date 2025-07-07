@@ -14,8 +14,44 @@ import dayjs from 'dayjs';
 import { LatestOrders } from '../../components/dashboard/overview/latest-orders';
 import { Traffic } from '../../components/dashboard/overview/traffic';
 
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from '../../contexts/user-context';
+import { WalletService } from '../../services/WalletServices';
 
 export default function Portfolio(): React.JSX.Element {
+
+  const [supportedAssets, setSupportedAssets] = useState([]);
+  const [assets, setAssets] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('UserContext must be used within a UserProvider');
+  }
+
+  const { user } = context;
+
+    useEffect(() => {
+    if (!user) return;
+
+    const fetchWallet = async () => {
+      try {
+        const data = await WalletService.getSupportedAssets();
+        console.log(data);
+        setSupportedAssets(data);
+      } catch (err) {
+        console.error('Error fetching wallet:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWallet();
+  }, [user]);
+
+  
+
+
   return (
     <Layout>
       <Grid container spacing={3}>
