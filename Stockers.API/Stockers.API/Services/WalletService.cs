@@ -7,6 +7,8 @@ public class WalletService : IWalletService
 {
     private readonly DataContext _context;
 
+    private readonly ILogger<WalletService> _logger;
+
     private readonly YahooFinanceService _yahooFinanceService;
 
     public WalletService(DataContext context, YahooFinanceService yahooService)
@@ -198,5 +200,43 @@ public class WalletService : IWalletService
 
         return result;
     }
+
+    public async Task<ServiceViewResult<decimal>> GetUserPortfolioValueAsync(int userId)
+{
+    try
+    {
+        var userAssets = await _context.UserAssets
+            .Where(ua => ua.UserId == userId)
+            .ToListAsync();
+
+        decimal total = 0;
+
+        foreach (var ua in userAssets)
+        {
+            var latestPrice = await _context.AssetPriceHistory
+                .Where(ph => ph.AssetId == ua.AssetId)
+                .OrderByDescending(ph => ph.Timestamp)
+                .Select(ph => ph.Price)
+                .FirstOrDefaultAsync();
+
+            total += latestPrice * ua.Quantity;
+        }
+
+        return new ServiceViewResult<decimal>
+        {
+            Success = true,
+            Data = total
+        };
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Error calculating portfolio value");
+        return new ServiceViewResult<decimal>
+        {
+            Success = false,
+            Message = "Error calculating portfolio value"
+        };
+    }
+}
 
 }

@@ -6,7 +6,7 @@ using Stockers.API.Services.Interfaces;
 
 namespace Stockers.API.Controllers
 {
-   [Route("[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class WalletController : Controller
     {
@@ -123,6 +123,22 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, "Failed to fetch wallet");
             }
         }
+        [HttpGet("portfolio/{userId}")]
+        public async Task<IActionResult> GetUserPortfolioValue(int userId)
+        {
+            try
+            {
+                var total = await _walletService.GetUserPortfolioValueAsync(userId);
+                return Ok(new { TotalValue = total });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error calculating portfolio value");
+                return StatusCode(500, "Failed to fetch portfolio value");
+            }
+        }
+
+
 
     }
 }

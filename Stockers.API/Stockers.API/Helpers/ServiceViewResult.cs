@@ -10,6 +10,10 @@ namespace Stockers.API.Helpers
 
         public bool HasErrors => ValidationErrors.Any();
 
+        public bool Success { get; set; } = true;
+
+        public string Message { get; set; } = string.Empty;
+
         public void AddModelErrors(ModelStateDictionary modelState)
         {
             foreach (var err in ValidationErrors)
