@@ -72,6 +72,27 @@ namespace Stockers.API.Controllers
             }
         }
 
+        // GET /api/assets/{symbol}/history?hours=12
+        [HttpGet("history/{symbol}")]
+        public async Task<IActionResult> GetPriceHistory(string symbol)
+        {
+            var asset = await _context.Assets.FirstOrDefaultAsync(a => a.Symbol == symbol);
+            if (asset == null)
+                return NotFound("Asset not found");
+
+            var history = await _context.AssetPriceHistory
+                .Where(h => h.AssetId == asset.Id)
+                .OrderByDescending(h => h.Timestamp)
+                .Take(10) // Limit for performance, e.g., last 10 records
+                .OrderBy(h => h.Timestamp) // Reorder chronologically
+                .ToListAsync();
+
+            return Ok(history.Select(h => new {
+                h.Timestamp,
+                Price = Math.Round(h.Price, 2)
+            }));
+        }
+
     }
 
 }
