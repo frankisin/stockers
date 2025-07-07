@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { useUserContext } from '../../../contexts/user-context';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -13,16 +14,19 @@ import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 
-
 export interface SummaryProps {
   sx?: SxProps;
 }
 
 export function Summary({ sx }: SummaryProps): React.JSX.Element {
+  const { user } = useUserContext();
+  const balance: number = Number(user?.userBalance ?? 0);
+
+  console.log('User from context:', user);
+
+
   return (
-    <Card sx={
-      sx
-    }>
+    <Card sx={sx}>
       <CardHeader
         title="Portfolio Summary"
         slotProps={{
@@ -38,13 +42,15 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
       />
       <CardContent>
         <Typography variant="h4" color="text.primary">
-          $128,490.32
+          ${balance.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </Typography>
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
-          As of June 27, 2025
+          As of July 7, 2025
         </Typography>
 
-        {/* Nested Card */}
         <Card
           elevation={0}
           sx={{

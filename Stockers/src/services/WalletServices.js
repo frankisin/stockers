@@ -26,6 +26,14 @@ export const WalletService = {
       throw error.response?.data?.message || 'Sell failed';
     }
   },
+  getAssetHistory: async (symbol) => {
+    try {
+      const response = await api.get(`/Stocks/history/${symbol}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.message || 'Failed to fetch asset history';
+    }
+  },
 
   getUserWallet: async (userId) => {
     try {

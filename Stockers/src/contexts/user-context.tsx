@@ -32,6 +32,7 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     error: null,
     isLoading: true,
   });
+  
 
   const checkSession = useCallback(async (): Promise<void> => {
     const token = localStorage.getItem('token');
