@@ -141,7 +141,7 @@ namespace Stockers.API.Controllers
                 username = userDto.username,
                 password = BCrypt.Net.BCrypt.HashPassword(userDto.password),
                 Role = userDto.Role,
-                userBalance = 0
+                userBalance = Math.Round(10000.0m, 2) // ensures two decimal places
             };
 
             await dataContext.Users.AddAsync(user);
