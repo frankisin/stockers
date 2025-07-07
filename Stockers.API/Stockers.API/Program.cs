@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using Stockers.API.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,10 @@ builder.Services.AddHttpClient<YahooFinanceService>();
 
 //background service for asset updates..
 builder.Services.AddHostedService<AssetPriceUpdater>();
+
+//wallet service..
+builder.Services.AddScoped<IWalletService, WalletService>();
+
 
 // JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

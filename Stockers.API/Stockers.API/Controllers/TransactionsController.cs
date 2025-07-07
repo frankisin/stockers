@@ -33,7 +33,7 @@ namespace Stockers.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTransaction([FromBody] Transaction transaction)
+        public async Task<IActionResult> CreateTransaction([FromBody] UserAssetTransaction transaction)
         {
             if (transaction == null)
                 return BadRequest("Transaction is null");
@@ -43,21 +43,6 @@ namespace Stockers.API.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(transaction);
-        }
-
-        // GET: api/transactions/{productId}
-        // Get all transactions for a specific product
-        [HttpGet("{productId}")]
-        public async Task<IActionResult> GetTransactionsForProduct(int productId)
-        {
-            var transactions = await _context.Transactions
-                                             .Where(t => t.ProductID == productId)
-                                             .ToListAsync();
-
-            if (transactions == null || transactions.Count == 0)
-                return NotFound("No transactions found for this product");
-
-            return Ok(transactions);
         }
 
         // GET: api/transactions

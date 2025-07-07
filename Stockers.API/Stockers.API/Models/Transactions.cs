@@ -3,15 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stockers.API.Models
 {
-    public class Transaction
+    public class UserAssetTransaction
     {
-        public int ID { get; set; }
-        public int ProductID { get; set; }
-        public int QuantityChange { get; set; }
-        public string TransactionType { get; set; }  // SALE, RETURN, RESTOCK
-        public DateTime TransactionDate { get; set; } = DateTime.Now;
-        [ForeignKey("InvoiceID")]
-        public int? InvoiceID { get; set; }  // Nullable if not linked to an invoice
+        public int Id { get; set; }
+        public int UserId { get; set; }
+        public string AssetSymbol { get; set; }
+        public decimal Quantity { get; set; }
+        public decimal PricePerShare { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string Type { get; set; } // "buy" or "sell"
     }
 
 }

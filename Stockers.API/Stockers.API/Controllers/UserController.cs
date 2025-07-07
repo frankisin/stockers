@@ -23,7 +23,8 @@ namespace Stockers.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var users = await dataContext.Users.ToListAsync();
+            var users = await dataContext.Users.Include(u => u.UserAssets)
+            .ThenInclude(ua => ua.Asset).Include(u => u.PortfolioHistory).ToListAsync();
             return Ok(users);
         }
         [HttpGet("Balance/{ID}")]
