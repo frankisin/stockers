@@ -29,6 +29,7 @@ export const WalletService = {
   getAssetHistory: async (symbol) => {
     try {
       const response = await api.get(`/Stocks/history/${symbol}`);
+      //console.log(`History for${symbol}`,response.data);
       return response.data;
     } catch (error) {
       throw error.response?.data?.message || 'Failed to fetch asset history';
@@ -41,6 +42,15 @@ export const WalletService = {
       return response.data;
     } catch (error) {
       throw error.response?.data?.message || 'Failed to fetch wallet';
+    }
+  },
+    getUserWalletValue: async (userId) => {
+    try {
+      const response = await api.get(`/Wallet/portfolio/${userId}`);
+      console.log("Portfolio value: ",response.data)
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.message || 'Failed to fetch wallet value';
     }
   },
 

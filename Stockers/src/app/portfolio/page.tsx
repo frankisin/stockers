@@ -48,10 +48,7 @@ export default function Portfolio(): React.JSX.Element {
 
     fetchWallet();
   }, [user]);
-
   
-
-
   return (
     <Layout>
       <Grid container spacing={3}>

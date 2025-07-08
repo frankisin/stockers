@@ -13,16 +13,37 @@ import InsertChartIcon from '@mui/icons-material/InsertChart';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
-
+import { useEffect, useState } from 'react';
+import { WalletService } from '../../../services/WalletServices';
 export interface SummaryProps {
   sx?: SxProps;
 }
 
 export function Summary({ sx }: SummaryProps): React.JSX.Element {
   const { user } = useUserContext();
-  const balance: number = Number(user?.userBalance ?? 0);
 
   console.log('User from context:', user);
+
+
+
+  const [balance, setBalance] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchPortfolioValue = async () => {
+      if (!user?.ID) return;
+      try {
+        const response = await WalletService.getUserWalletValue(user.ID);
+        setBalance(response.TotalValue.Data ?? 0);
+      } catch (error) {
+        console.error('Failed to fetch wallet value:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPortfolioValue();
+  }, [user?.ID]);
+
 
 
   return (
@@ -41,12 +62,17 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
         }}
       />
       <CardContent>
-        <Typography variant="h4" color="text.primary">
-          ${balance.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </Typography>
+        {isLoading ? (
+          <Typography variant="h4" color="text.secondary">Loading...</Typography>
+        ) : (
+          <Typography variant="h4" color="text.primary">
+            ${balance?.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          </Typography>
+        )}
+
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
           As of July 7, 2025
         </Typography>
