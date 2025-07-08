@@ -10,6 +10,7 @@ export const WalletService = {
       });
       return response.data;
     } catch (error) {
+      console.log('buyAsset WalletServices error: ',error);
       throw error.response?.data?.message || 'Buy failed';
     }
   },

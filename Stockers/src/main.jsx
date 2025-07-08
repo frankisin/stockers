@@ -6,12 +6,15 @@ import { BrowserRouter } from 'react-router-dom'
 import { UserProvider } from './contexts/user-context.js'
 import './index.css'
 import App from './App.jsx'
+import { SnackbarProvider } from 'notistack';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
     <UserProvider>
-      <App/>
+      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+          <App/>
+      </SnackbarProvider>
       </UserProvider>
     </BrowserRouter>
   </React.StrictMode>,

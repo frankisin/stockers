@@ -16,6 +16,9 @@ import { authClient } from '../../../lib/auth/client';
 import { logger } from '../../../lib/default-logger';
 import { useUser } from '../../../hooks/use-user';
 
+import { useUserContext } from '../../../contexts/user-context';
+
+
 export interface UserPopoverProps {
   anchorEl: Element | null;
   onClose: () => void;
@@ -25,6 +28,8 @@ export interface UserPopoverProps {
 export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): React.JSX.Element {
   const { checkSession } = useUser();
   const navigate = useNavigate();
+  const { user } = useUserContext();
+
 
   const handleSignOut = React.useCallback(async (): Promise<void> => {
     try {
@@ -58,10 +63,13 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
       slotProps={{ paper: { sx: { width: '240px' } } }}
     >
       <Box sx={{ p: '16px 20px ' }}>
-        <Typography variant="subtitle1">Frank Velazquez</Typography>
-        <Typography color="text.secondary" variant="body2">
-          franyer.velazquez@lmco.com
-        </Typography>
+        <Typography variant="subtitle1">
+        {(user?.firstName || '') + ' ' + (user?.lastName || '')}
+      </Typography>
+
+      <Typography variant="body2">{user?.email || user?.username || 'Unknown User'}</Typography>
+
+
       </Box>
       <Divider />
       <MenuList disablePadding sx={{ p: '8px', '& .MuiMenuItem-root': { borderRadius: 1 } }}>

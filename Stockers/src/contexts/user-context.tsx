@@ -14,6 +14,8 @@ export interface UserContextValue {
   setUser: (user: User | null) => void;
   signOut: () => void;
   walletService: typeof WalletService;
+  balance: number | null;
+  refreshBalance: () => Promise<void>;
 }
 
 export const UserContext = React.createContext<UserContextValue | undefined>(undefined);
@@ -32,7 +34,24 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     error: null,
     isLoading: true,
   });
-  
+
+  const [balance, setBalance] = useState<number | null>(null);
+
+  const refreshBalance = useCallback(async () => {
+    if (!state.user?.ID) return;
+    try {
+      const response = await WalletService.getUserWalletValue(state.user.ID);
+      setBalance(response.TotalValue.Data ?? 0);
+    } catch (error) {
+      logger.error('Failed to refresh balance:', error);
+    }
+  }, [state.user?.ID]);
+
+  // Fetch balance initially
+  useEffect(() => {
+    refreshBalance();
+  }, [refreshBalance]);
+
 
   const checkSession = useCallback(async (): Promise<void> => {
     const token = localStorage.getItem('token');
@@ -75,12 +94,15 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
   }, [checkSession]);
 
   const value: UserContextValue = {
-    ...state,
-    checkSession,
-    setUser: (user) => setState((prev) => ({ ...prev, user })),
-    signOut,
-    walletService: WalletService,
-  };
+  ...state,
+  checkSession,
+  setUser: (user) => setState((prev) => ({ ...prev, user })),
+  signOut,
+  walletService: WalletService,
+  balance,
+  refreshBalance,
+};
+
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

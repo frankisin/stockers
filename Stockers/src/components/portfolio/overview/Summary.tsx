@@ -26,23 +26,19 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
 
 
 
-  const [balance, setBalance] = useState<number | null>(null);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { balance, refreshBalance } = useUserContext();
+
 
   useEffect(() => {
-    const fetchPortfolioValue = async () => {
-      if (!user?.ID) return;
-      try {
-        const response = await WalletService.getUserWalletValue(user.ID);
-        setBalance(response.TotalValue.Data ?? 0);
-      } catch (error) {
-        console.error('Failed to fetch wallet value:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPortfolioValue();
-  }, [user?.ID]);
+  const fetch = async () => {
+    if (!user?.ID) return;
+    await refreshBalance(); // 
+    setIsLoading(false);
+  };
+  fetch();
+}, [user?.ID, refreshBalance]);
 
 
 
