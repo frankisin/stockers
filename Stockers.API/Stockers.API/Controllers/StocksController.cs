@@ -74,23 +74,82 @@ namespace Stockers.API.Controllers
 
         // GET /api/assets/{symbol}/history?hours=12
         [HttpGet("history/{symbol}")]
-        public async Task<IActionResult> GetPriceHistory(string symbol)
+        public async Task<IActionResult> GetPriceHistory(string symbol, string range = "1d", string interval = "15m")
         {
             var asset = await _context.Assets.FirstOrDefaultAsync(a => a.Symbol == symbol);
             if (asset == null)
                 return NotFound("Asset not found");
 
-            var history = await _context.AssetPriceHistory
-                .Where(h => h.AssetId == asset.Id)
-                .OrderByDescending(h => h.Timestamp)
-                .Take(10) // Limit for performance, e.g., last 10 records
-                .OrderBy(h => h.Timestamp) // Reorder chronologically
+            var now = DateTime.UtcNow;
+            TimeZoneInfo easternZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            var easternNow = TimeZoneInfo.ConvertTimeFromUtc(now, easternZone);
+
+            DateTime startTime;
+            DateTime marketOpen = easternNow.Date.AddHours(9).AddMinutes(30);
+            DateTime marketClose = easternNow.Date.AddHours(16);
+
+            if (easternNow.TimeOfDay >= marketOpen.TimeOfDay && easternNow.TimeOfDay <= marketClose.TimeOfDay)
+            {
+                var todayMarketOpen = easternNow.Date.AddHours(9).AddMinutes(30);
+                startTime = TimeZoneInfo.ConvertTimeToUtc(todayMarketOpen, easternZone);
+            }
+            else
+            {
+                DateTime lastTradingDay = easternNow.DayOfWeek == DayOfWeek.Monday
+                    ? easternNow.AddDays(-3).Date
+                    : easternNow.AddDays(-1).Date;
+
+                DateTime lastMarketOpen = lastTradingDay.AddHours(9).AddMinutes(30);
+                DateTime lastMarketClose = lastTradingDay.AddHours(16);
+
+                startTime = TimeZoneInfo.ConvertTimeToUtc(lastMarketOpen, easternZone);
+                now = TimeZoneInfo.ConvertTimeToUtc(lastMarketClose, easternZone);
+            }
+
+            var rawHistory = await _context.AssetPriceHistory
+                .Where(h => h.AssetId == asset.Id && h.Timestamp >= startTime && h.Timestamp <= now)
+                .OrderBy(h => h.Timestamp)
                 .ToListAsync();
 
-            return Ok(history.Select(h => new {
-                h.Timestamp,
-                Price = Math.Round(h.Price, 2)
-            }));
+            List<object> reducedHistory;
+
+            if (interval == "15m")
+            {
+                reducedHistory = rawHistory
+                    .GroupBy(h => new
+                    {
+                        h.Timestamp.Year,
+                        h.Timestamp.Month,
+                        h.Timestamp.Day,
+                        h.Timestamp.Hour,
+                        QuarterHour = h.Timestamp.Minute / 15
+                    })
+                    .Select(g => g.OrderBy(x => x.Timestamp).Last())
+                    .Select(h => new
+                    {
+                        h.Timestamp,
+                        Price = Math.Round(h.Price, 2)
+                    }).ToList<object>();
+            }
+            else
+            {
+                reducedHistory = rawHistory
+                    .GroupBy(h => new
+                    {
+                        h.Timestamp.Year,
+                        h.Timestamp.Month,
+                        h.Timestamp.Day,
+                        h.Timestamp.Hour
+                    })
+                    .Select(g => g.OrderBy(x => x.Timestamp).Last())
+                    .Select(h => new
+                    {
+                        h.Timestamp,
+                        Price = Math.Round(h.Price, 2)
+                    }).ToList<object>();
+            }
+
+            return Ok(reducedHistory);
         }
 
     }
