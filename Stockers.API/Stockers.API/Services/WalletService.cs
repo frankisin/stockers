@@ -48,15 +48,19 @@ public class WalletService : IWalletService
 
             var currentPrice = quote.Value;
             var totalCost = currentPrice * model.Quantity;
+            var fee = totalCost * 0.03m;
+            var totalWithFee = totalCost + fee;
 
-            if (user.userBalance < totalCost)
+
+            // Check if user has enough to cover purchase + fee
+            if (user.userBalance < totalWithFee)
             {
                 result.ValidationErrors.Add("Balance : Insufficient funds to complete purchase.");
                 return result;
             }
 
-            // Deduct cost from user balance
-            user.userBalance -= totalCost;
+            // Deduct cost from user balance (cost + 3% fee)
+            user.userBalance -= totalWithFee;
 
             var existing = await _context.UserAssets
                 .FirstOrDefaultAsync(ua => ua.UserId == model.UserId && ua.AssetId == asset.Id);
