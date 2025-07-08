@@ -36,6 +36,9 @@ builder.Services.AddHttpClient<YahooFinanceService>();
 //background service for asset updates..
 builder.Services.AddHostedService<AssetPriceUpdater>();
 
+//background service for asset updates..
+builder.Services.AddHostedService<UserPortfolioValuator>();
+
 //wallet service..
 builder.Services.AddScoped<IWalletService, WalletService>();
 

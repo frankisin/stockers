@@ -29,10 +29,6 @@ namespace Stockers.API.Helpers
 
         public DbSet<AssetPriceHistory> AssetPriceHistory { get; set; }
         public DbSet<UserPortfolioValue> UserPortfolioValue { get; set; }
-
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Users>()
