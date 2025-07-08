@@ -44,6 +44,8 @@ namespace Stockers.API.Models
 
     public ICollection<UserPortfolioValue> PortfolioHistory { get; set; }
 
+    public decimal? PortfolioValue { get; set; }
+
 
     public Users() { }
 

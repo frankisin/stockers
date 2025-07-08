@@ -19,6 +19,8 @@ namespace Stockers.API.Helpers
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<InvoiceItem> InvoiceItems { get; set; }
         public DbSet<UserAssetTransaction> Transactions { get; set; }
+
+        public DbSet<UserPortfolioValue> userPortfolioValues {get; set;}
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
         public DbSet<ShippingAddress> ShippingAddresses { get; set; }
         public DbSet<CasinoTransaction> CasinoTransactions { get; set; }
