@@ -20,7 +20,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { enqueueSnackbar } from 'notistack';
 
 const width = 120;
-const height = 35;
+const height = 45;
 
 export function Wallet() {
     const { user, walletService, checkSession, refreshBalance } = useUserContext();
@@ -170,7 +170,10 @@ export function Wallet() {
                                 sx={{
                                     p: 2,
                                     display: 'flex',
-                                    flexDirection: { xs: 'column', sm: 'row' },
+                                
+                                    flexDirection: 'row',
+                                    flexWrap: 'nowrap',
+                                
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                     borderRadius: 2,
@@ -179,13 +182,21 @@ export function Wallet() {
                                     gap: 2
                                 }}
                             >
-                                <Box sx={{ flex: 1 }}>
-                                    <Typography variant="subtitle1" noWrap>
+                                <Box sx={{ flex: 1,minWidth: 0 }}>
+        
+                                    <Typography
+                                        variant="subtitle1"
+                                        sx={{
+                                            whiteSpace: 'nowrap',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            maxWidth: '100%',
+                                            display: 'block',
+                                        }}
+                                        >
                                         {Asset?.Name} ({Asset?.Symbol})
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        Qty: {Quantity ?? 'N/A'}
-                                    </Typography>
+                                        </Typography>
+
                                     <Typography
                                         variant="body2"
                                         sx={{
@@ -203,32 +214,33 @@ export function Wallet() {
                                     </Typography>
                                 </Box>
                                 <Box
-                                    sx={{
-                                        mb: 1,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: { xs: '100%', sm: width },
-                                        height: height * 1.2,
-                                        overflow: 'hidden',
-                                    }}
+                                sx={{
+                                    width: width,
+                                    minWidth: width,
+                                    height: height * 1.2,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    overflow: 'hidden',
+                                }}
                                 >
-                                    <svg
-                                        width="100%"
-                                        height="100%"
-                                        viewBox={`0 0 ${width} ${height * 1.2}`}
-                                        preserveAspectRatio="xMidYMid meet"
-                                    >
-                                        <LinePath
-                                            data={trend}
-                                            x={(d, i) => xScale(i)}
-                                            y={(d) => yScale(d)}
-                                            stroke={color}
-                                            strokeWidth={1.5}
-                                            fill="none"
-                                        />
-                                    </svg>
+                                <svg
+                                    width="100%"
+                                    height="100%"
+                                    viewBox={`0 0 ${width} ${height * 1.2}`}
+                                    preserveAspectRatio="xMidYMid meet"
+                                >
+                                    <LinePath
+                                    data={trend}
+                                    x={(d, i) => xScale(i)}
+                                    y={(d) => yScale(d)}
+                                    stroke={color}
+                                    strokeWidth={1.5}
+                                    fill="none"
+                                    />
+                                </svg>
                                 </Box>
+
 
                             </Paper>
                         );
