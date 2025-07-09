@@ -330,7 +330,7 @@ export function Wallet() {
                                                     setFilteredAssets([]);
 
                                                     try {
-                                                        const history = await walletService.getAssetHistory(asset.Symbol);
+                                                        const history = await walletService.getAssetHistory({symbol:asset.Symbol,interval:'5m'});
                                                         const latestPrice = history?.[history.length - 1]?.Price ?? null;
                                                         setSelectedPrice(latestPrice);
                                                     } catch (err) {
