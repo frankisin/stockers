@@ -43,6 +43,7 @@ export function Wallet() {
     const fee = subtotal * 0.03;
     const total = subtotal + (tradeType === 'buy' ? fee : -fee);
 
+
     useEffect(() => {
         const fetchWallet = async () => {
             if (!user?.ID) {
@@ -124,58 +125,41 @@ export function Wallet() {
 
 
                 <Box
-                    sx={{
-                        position: 'relative',
-                        maxHeight: 3 * 88,
-                        overflowY: 'auto',
-                        pr: 1,
-                        '&::after': {
-                            content: '""',
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: '24px',
-                            background: 'linear-gradient(to bottom, rgba(255,255,255,0), white)',
-                            pointerEvents: 'none',
-                        },
-                    }}
+                sx={{
+                    position: 'relative',
+                    maxHeight: 3 * 88,
+                    overflowY: 'auto',
+                    pr: 1,
+                }}
                 >
-                    {walletItems.map((item) => {
-                        const {
-                            Id,
-                            Quantity,
-                            AvgPurchasePrice,
-                            Asset
-                        } = item;
+                <Box
+                    sx={{
+                    position: 'sticky',
+                    bottom: 0,
+                    height: '24px',
+                    background: 'linear-gradient(to bottom, rgba(255,255,255,0), white)',
+                    zIndex: 1,
+                    pointerEvents: 'none',
+                    }}
+                />
 
+                    {walletItems.map((item) => {
+                        const { Id, Quantity, AvgPurchasePrice, Asset } = item;
                         const average = typeof AvgPurchasePrice === 'number' ? AvgPurchasePrice : 0;
                         const trend = trendMap[Asset?.Symbol] || [average, average * 1.05, average * 0.95];
                         const rawExtent = extent(trend);
-                        const padding = 0.001; // 0.1% padding
-
                         const minValue = rawExtent[0] ?? 0;
                         const maxValue = rawExtent[1] ?? 1;
-
+                        const padding = 0.001;
                         let min = minValue * (1 - padding);
                         let max = maxValue * (1 + padding);
-
-                        // If the range is too small, artificially inflate it
                         if (Math.abs(max - min) < 1) {
                             const mid = (min + max) / 2;
                             min = mid - 0.5;
                             max = mid + 0.5;
                         }
-
-                        const yScale = scaleLinear({
-                            domain: [min, max],
-                            range: [height, 0],
-                        });
-                        const xScale = scaleLinear({
-                            domain: [0, trend.length - 1],
-                            range: [0, width],
-                        });
-
+                        const yScale = scaleLinear({ domain: [min, max], range: [height, 0] });
+                        const xScale = scaleLinear({ domain: [0, trend.length - 1], range: [0, width] });
                         const isUp = trend[trend.length - 1] >= trend[0];
                         const color = isUp ? '#00C853' : '#D50000';
 
@@ -186,48 +170,67 @@ export function Wallet() {
                                 sx={{
                                     p: 2,
                                     display: 'flex',
+                                    flexDirection: { xs: 'column', sm: 'row' },
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
                                     borderRadius: 2,
                                     width: '100%',
                                     backgroundColor: 'white',
+                                    gap: 2
                                 }}
                             >
-                                <Box>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'nowrap' }}>
-                                        <Typography variant="subtitle1" noWrap>
-                                            {Asset?.Name} ({Asset?.Symbol})
-                                        </Typography>
-
-                                    </Box>
-
-
-
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="subtitle1" noWrap>
+                                        {Asset?.Name} ({Asset?.Symbol})
+                                    </Typography>
                                     <Typography variant="body2" color="text.secondary">
-                                        Qty: {Quantity ?? 'N/A'} • Avg: ${average.toFixed(2)}
-                                        <Typography
-                                            component="span"
-                                            sx={{ color, fontSize: '.7rem', fontWeight: 300, whiteSpace: 'nowrap' }}
-                                        >
-                                            {isUp ? '▲' : '▼'}
-                                        </Typography>
+                                        Qty: {Quantity ?? 'N/A'}
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color,
+                                            fontWeight: 500,
+                                            fontSize: '0.85rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 0.5,
+                                            mt: 0.5,
+                                        }}
+                                    >
+                                        {isUp ? '▲' : '▼'} ${Math.abs((trend.at(-1) ?? 0) - (trend[0] ?? 0)).toFixed(2)} (
+                                        {Math.abs((((trend.at(-1) ?? 0) - (trend[0] ?? 1)) / (trend[0] ?? 1)) * 100).toFixed(2)}%) today
                                     </Typography>
                                 </Box>
-
-
-                                <Box sx={{ mb: 1 }}>
-                                    <svg width={width} height={height * 1.2}>
+                                <Box
+                                    sx={{
+                                        mb: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: { xs: '100%', sm: width },
+                                        height: height * 1.2,
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <svg
+                                        width="100%"
+                                        height="100%"
+                                        viewBox={`0 0 ${width} ${height * 1.2}`}
+                                        preserveAspectRatio="xMidYMid meet"
+                                    >
                                         <LinePath
                                             data={trend}
                                             x={(d, i) => xScale(i)}
                                             y={(d) => yScale(d)}
                                             stroke={color}
                                             strokeWidth={1.5}
+                                            fill="none"
                                         />
                                     </svg>
                                 </Box>
-                            </Paper>
 
+                            </Paper>
                         );
                     })}
                 </Box>
@@ -315,7 +318,7 @@ export function Wallet() {
                                                     setFilteredAssets([]);
 
                                                     try {
-                                                        const history = await walletService.getAssetHistory(asset.Symbol,"1h", "1d");
+                                                        const history = await walletService.getAssetHistory(asset.Symbol);
                                                         const latestPrice = history?.[history.length - 1]?.Price ?? null;
                                                         setSelectedPrice(latestPrice);
                                                     } catch (err) {
