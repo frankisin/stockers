@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Stockers.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e2e907fba06ace2d2accf9f7cf21c248500e14af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d00309dd47bdaa4f04f523085ea256ed2e1049b4")]
 [assembly: System.Reflection.AssemblyProductAttribute("Stockers.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Stockers.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

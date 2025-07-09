@@ -43,7 +43,7 @@ public class UserPortfolioValuator : BackgroundService
                 user.PortfolioValue = totalValue;
 
                 // Add new history row
-                db.userPortfolioValues.Add(new UserPortfolioValue
+                db.UserPortfolioValue.Add(new UserPortfolioValue
                 {
                     UserId = user.ID,
                     TotalValue = totalValue,

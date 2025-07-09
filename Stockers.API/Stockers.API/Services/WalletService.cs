@@ -206,41 +206,64 @@ public class WalletService : IWalletService
     }
 
     public async Task<ServiceViewResult<decimal>> GetUserPortfolioValueAsync(int userId)
+    {
+        try
+        {
+            var userAssets = await _context.UserAssets
+                .Where(ua => ua.UserId == userId)
+                .ToListAsync();
+
+            decimal total = 0;
+
+            foreach (var ua in userAssets)
+            {
+                var latestPrice = await _context.AssetPriceHistory
+                    .Where(ph => ph.AssetId == ua.AssetId)
+                    .OrderByDescending(ph => ph.Timestamp)
+                    .Select(ph => ph.Price)
+                    .FirstOrDefaultAsync();
+
+                total += latestPrice * ua.Quantity;
+            }
+
+            return new ServiceViewResult<decimal>
+            {
+                Success = true,
+                Data = total
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error calculating portfolio value");
+            return new ServiceViewResult<decimal>
+            {
+                Success = false,
+                Message = "Error calculating portfolio value"
+            };
+        }
+    }
+
+    public async Task<ServiceViewResult<List<UserPortfolioValue>>> GetUserPortfolioHistoryAsync(int userId)
 {
+    var result = new ServiceViewResult<List<UserPortfolioValue>>();
+
     try
     {
-        var userAssets = await _context.UserAssets
-            .Where(ua => ua.UserId == userId)
+        var history = await _context.UserPortfolioValue
+            .Where(pv => pv.UserId == userId)
+            .OrderBy(pv => pv.Timestamp)
             .ToListAsync();
 
-        decimal total = 0;
-
-        foreach (var ua in userAssets)
-        {
-            var latestPrice = await _context.AssetPriceHistory
-                .Where(ph => ph.AssetId == ua.AssetId)
-                .OrderByDescending(ph => ph.Timestamp)
-                .Select(ph => ph.Price)
-                .FirstOrDefaultAsync();
-
-            total += latestPrice * ua.Quantity;
-        }
-
-        return new ServiceViewResult<decimal>
-        {
-            Success = true,
-            Data = total
-        };
+        result.Data = history;
+        result.Success = true;
     }
     catch (Exception ex)
     {
-        _logger.LogError(ex, "Error calculating portfolio value");
-        return new ServiceViewResult<decimal>
-        {
-            Success = false,
-            Message = "Error calculating portfolio value"
-        };
+        _logger.LogError(ex, "Error fetching portfolio history for user {UserId}", userId);
+        result.Notifications.Add(NotificationType.Error, "Could not fetch portfolio history.");
     }
+
+    return result;
 }
 
 }

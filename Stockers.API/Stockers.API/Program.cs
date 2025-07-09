@@ -29,6 +29,7 @@ builder.Services.AddScoped<TokenService>();
 // EF Core DB context
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
 
 //Yahoo Finance Service
 builder.Services.AddHttpClient<YahooFinanceService>();
