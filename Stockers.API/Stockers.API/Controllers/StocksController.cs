@@ -73,7 +73,7 @@ namespace Stockers.API.Controllers
         }
 
         // GET /api/assets/{symbol}/history?hours=12
-        [HttpGet("history")]
+        [HttpGet("history/{symbol}")]
         public async Task<IActionResult> GetBatchPriceHistory([FromQuery] string symbols, [FromQuery] string range = "1mo", [FromQuery] string interval = "1d")
         {
             if (string.IsNullOrWhiteSpace(symbols))
