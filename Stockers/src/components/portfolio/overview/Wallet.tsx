@@ -19,9 +19,6 @@ import Tooltip from '@mui/material/Tooltip';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { enqueueSnackbar } from 'notistack';
 
-
-
-
 const width = 120;
 const height = 35;
 
@@ -42,15 +39,9 @@ export function Wallet() {
     const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
     const [transactionError, setTransactionError] = useState<string | null>(null);
 
-
-
-
     const subtotal = selectedPrice && quantity ? selectedPrice * Number(quantity) : 0;
     const fee = subtotal * 0.03;
     const total = subtotal + (tradeType === 'buy' ? fee : -fee);
-
-
-
 
     useEffect(() => {
         const fetchWallet = async () => {
@@ -324,7 +315,7 @@ export function Wallet() {
                                                     setFilteredAssets([]);
 
                                                     try {
-                                                        const history = await walletService.getAssetHistory(asset.Symbol);
+                                                        const history = await walletService.getAssetHistory(asset.Symbol,"1h", "1d");
                                                         const latestPrice = history?.[history.length - 1]?.Price ?? null;
                                                         setSelectedPrice(latestPrice);
                                                     } catch (err) {
