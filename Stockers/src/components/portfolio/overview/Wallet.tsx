@@ -74,7 +74,9 @@ export function Wallet() {
                     const symbol = item.Asset?.Symbol;
                     if (!symbol) return;
                     try {
-                        const history = await walletService.getAssetHistory(symbol);
+                        //const history = await walletService.getAssetHistory(symbol);
+                        const history = await walletService.getAssetHistory({ symbol, interval: '15m', range: '1d' });
+
                         trends[symbol] = history.map((h: any) => h.Price);
                     } catch (err) {
                         console.error(`Error fetching trend for ${symbol}`, err);

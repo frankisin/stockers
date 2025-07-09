@@ -28,12 +28,11 @@ export const WalletService = {
     }
   },
   getAssetHistory: async ({ symbol, interval = '15m', range = '1d' }) => {
-    try {
-      const response = await api.get(`/Stocks/history/${symbol}`, {
-        params: { interval, range },
-      });
-      return response.data;
-    } catch (error) {
+    try{
+        const res = await api.get(`/Stocks/history/${symbol}`, {params: { interval, range },});
+        return res.data;
+    }
+    catch(error){
       throw error.response?.data?.message || 'Failed to fetch asset history';
     }
   },
