@@ -71,7 +71,9 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, "Failed to fetch supported assets");
             }
         }
-        [HttpGet("history/{symbol}")]
+
+        // GET /api/assets/{symbol}/history?hours=12
+        [HttpGet("history")]
         public async Task<IActionResult> GetBatchPriceHistory([FromQuery] string symbols, [FromQuery] string range = "1mo", [FromQuery] string interval = "1d")
         {
             if (string.IsNullOrWhiteSpace(symbols))
@@ -108,7 +110,38 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpGet("history/{symbol}")]
+        public async Task<IActionResult> GetPriceHistory(string symbol, [FromQuery] string range = "1d", [FromQuery] string interval = "15m")
+        {
+            if (string.IsNullOrWhiteSpace(symbol))
+                return BadRequest("Symbol is required");
 
+            try
+            {
+                // Reuse your existing batch method internally
+                var chartData = await _yahooService.GetChartBatchAsync(symbol, range, interval);
+
+                if (!chartData.TryGetValue(symbol, out var data) || data?.Timestamp == null)
+                    return NotFound($"No data found for symbol: {symbol}");
+
+                var entries = new List<object>();
+                for (int i = 0; i < data.Timestamp.Count; i++)
+                {
+                    entries.Add(new
+                    {
+                        Timestamp = DateTimeOffset.FromUnixTimeSeconds(data.Timestamp[i]).UtcDateTime,
+                        Price = Math.Round(data.Close[i], 2)
+                    });
+                }
+
+                return Ok(entries);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching chart for {symbol}: {ex.Message}");
+                return StatusCode(500, "Error fetching chart data");
+            }
+        }
     }
 
 }
