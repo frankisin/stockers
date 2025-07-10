@@ -70,5 +70,14 @@ export const WalletService = {
     } catch (error) {
       throw error.response?.data?.message || 'Failed to fetch supported assets';
     }
+  },
+  getUserPortfolioHistory: async (userId) => {
+  try {
+    const response = await api.get(`/Wallet/history/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data?.message || 'Failed to fetch portfolio history';
   }
+},
+
 };

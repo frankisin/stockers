@@ -198,6 +198,13 @@ export function Wallet() {
                                         >
                                         {Asset?.Name} ({Asset?.Symbol})
                                         </Typography>
+                                       <Typography
+                                        variant="body2"
+                                        sx={{ fontWeight: 500, fontSize: '0.85rem', color: 'text.secondary', mt: 0.5 }}
+                                        >
+                                        {trend.at(-1)?.toFixed(2)} USD (You own {Quantity} {Quantity === 1 ? 'share' : 'shares'})
+                                        </Typography>
+
 
                                     <Typography
                                         variant="body2"
