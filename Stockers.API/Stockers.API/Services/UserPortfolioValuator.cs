@@ -37,11 +37,25 @@ namespace Stockers.API.Services
                     {
                         if (ua.Asset != null)
                         {
-                            totalValue += ua.Quantity * ua.Asset.LatestPrice;
+                            decimal latestPrice = ua.Asset.LatestPrice;
+
+                            // Fallback: if LatestPrice is 0, fetch from AssetPriceHistory
+                            if (latestPrice <= 0)
+                            {
+                                latestPrice = await db.AssetPriceHistory
+                                    .Where(p => p.AssetId == ua.AssetId)
+                                    .OrderByDescending(p => p.Date)
+                                    .Select(p => (decimal?)p.Close)
+                                    .FirstOrDefaultAsync() ?? 0;
+                            }
+
+                            if (latestPrice > 0)
+                            {
+                                totalValue += ua.Quantity * latestPrice;
+                            }
                         }
                     }
 
-                    // Update snapshot of live value
                     user.PortfolioValue = totalValue;
 
                     var today = DateTime.UtcNow.Date;
