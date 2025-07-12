@@ -97,4 +97,49 @@ public class YahooFinanceService
         });
     }
 
+    public async Task<List<AssetPriceHistory>> GetOhlcHistoryAsync(string symbol, int days = 30)
+{
+    var url = $"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}?range={days}d&interval=1d";
+
+    using var client = new HttpClient();
+    var response = await client.GetAsync(url);
+    if (!response.IsSuccessStatusCode) return new List<AssetPriceHistory>();
+
+    var json = await response.Content.ReadAsStringAsync();
+    var doc = JsonDocument.Parse(json);
+
+    var chart = doc.RootElement.GetProperty("chart").GetProperty("result")[0];
+
+    var timestamps = chart.GetProperty("timestamp").EnumerateArray().ToArray();
+    var quote = chart.GetProperty("indicators").GetProperty("quote")[0];
+
+    var opens = quote.GetProperty("open").EnumerateArray().ToArray();
+    var highs = quote.GetProperty("high").EnumerateArray().ToArray();
+    var lows = quote.GetProperty("low").EnumerateArray().ToArray();
+    var closes = quote.GetProperty("close").EnumerateArray().ToArray();
+    var volumes = quote.GetProperty("volume").EnumerateArray().ToArray();
+
+    var history = new List<AssetPriceHistory>();
+
+    for (int i = 0; i < timestamps.Length; i++)
+    {
+        if (opens[i].ValueKind == JsonValueKind.Null || closes[i].ValueKind == JsonValueKind.Null)
+            continue;
+
+        var date = DateTimeOffset.FromUnixTimeSeconds(timestamps[i].GetInt64()).UtcDateTime.Date;
+
+        history.Add(new AssetPriceHistory
+        {
+            Date = date,
+            Open = opens[i].GetDecimal(),
+            High = highs[i].GetDecimal(),
+            Low = lows[i].GetDecimal(),
+            Close = closes[i].GetDecimal(),
+            Volume = volumes[i].ValueKind != JsonValueKind.Null ? volumes[i].GetInt64() : (long?)null
+        });
+    }
+
+    return history;
+}
+
 }

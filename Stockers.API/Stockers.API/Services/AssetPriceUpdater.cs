@@ -41,22 +41,29 @@ public class AssetPriceUpdater : BackgroundService
 
                         foreach (var asset in group)
                         {
-                            if (quotes.TryGetValue(asset.Symbol, out var price) && price.HasValue)
+                            var history = await _yahooService.GetOhlcHistoryAsync(asset.Symbol);
+
+                            if (history.Any())
                             {
-                                asset.LatestPrice = price.Value;
+                                // Update latest
+                                var latest = history.Last();
+                                asset.LatestPrice = latest.Close;
                                 asset.LastUpdated = DateTime.UtcNow;
 
-                                db.AssetPriceHistory.Add(new AssetPriceHistory
+                                foreach (var record in history)
                                 {
-                                    AssetId = asset.Id,
-                                    Price = price.Value,
-                                    Timestamp = DateTime.UtcNow
-                                });
+                                    // Avoid duplicates if already saved
+                                    bool exists = await db.AssetPriceHistory.AnyAsync(p =>
+                                        p.AssetId == asset.Id && p.Date == record.Date);
+
+                                    if (!exists)
+                                    {
+                                        record.AssetId = asset.Id;
+                                        db.AssetPriceHistory.Add(record);
+                                    }
+                                }
                             }
-                            else
-                            {
-                                _logger.LogWarning($"No price found for {asset.Symbol}");
-                            }
+
                         }
 
                         // Optional: Delay between batches to avoid throttling

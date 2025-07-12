@@ -1,62 +1,82 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Stockers.API.Helpers;
 using Stockers.API.Models;
 
-public class UserPortfolioValuator : BackgroundService
+namespace Stockers.API.Services
 {
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<UserPortfolioValuator> _logger;
-
-    public UserPortfolioValuator(IServiceScopeFactory scopeFactory, ILogger<UserPortfolioValuator> logger)
+    public class UserPortfolioValuator : BackgroundService
     {
-        _scopeFactory = scopeFactory;
-        _logger = logger;
-    }
+        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly ILogger<UserPortfolioValuator> _logger;
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
+        public UserPortfolioValuator(IServiceScopeFactory scopeFactory, ILogger<UserPortfolioValuator> logger)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<DataContext>();
+            _scopeFactory = scopeFactory;
+            _logger = logger;
+        }
 
-            var users = await db.Users
-                .Include(u => u.UserAssets)
-                    .ThenInclude(ua => ua.Asset)
-                .ToListAsync();
-
-            foreach (var user in users)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            while (!stoppingToken.IsCancellationRequested)
             {
-                decimal totalValue = 0;
+                using var scope = _scopeFactory.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<DataContext>();
 
-                foreach (var ua in user.UserAssets)
+                var users = await db.Users
+                    .Include(u => u.UserAssets)
+                        .ThenInclude(ua => ua.Asset)
+                    .ToListAsync();
+
+                foreach (var user in users)
                 {
-                    var asset = ua.Asset;
-                    if (asset != null)
+                    decimal totalValue = 0;
+
+                    foreach (var ua in user.UserAssets)
                     {
-                        totalValue += ua.Quantity * asset.LatestPrice;
+                        if (ua.Asset != null)
+                        {
+                            totalValue += ua.Quantity * ua.Asset.LatestPrice;
+                        }
                     }
 
+                    // Update snapshot of live value
+                    user.PortfolioValue = totalValue;
+
+                    var today = DateTime.UtcNow.Date;
+
+                    var existing = await db.UserPortfolioValue
+                        .FirstOrDefaultAsync(pv => pv.UserId == user.ID && pv.Date == today);
+
+                    if (existing == null)
+                    {
+                        db.UserPortfolioValue.Add(new UserPortfolioValue
+                        {
+                            UserId = user.ID,
+                            Date = today,
+                            Open = totalValue,
+                            High = totalValue,
+                            Low = totalValue,
+                            Close = totalValue
+                        });
+                    }
+                    else
+                    {
+                        existing.Close = totalValue;
+                        if (totalValue > existing.High) existing.High = totalValue;
+                        if (totalValue < existing.Low) existing.Low = totalValue;
+                    }
+
+                    _logger.LogInformation($"[Valuator] User {user.ID} portfolio updated: ${totalValue:N2}");
                 }
 
-                // Update current value
-                user.PortfolioValue = totalValue;
+                await db.SaveChangesAsync();
 
-                // Add new history row
-                db.UserPortfolioValue.Add(new UserPortfolioValue
-                {
-                    UserId = user.ID,
-                    TotalValue = totalValue,
-                    Timestamp = DateTime.UtcNow
-                });
+                _logger.LogInformation("[Valuator] All user portfolios updated at {Time}", DateTime.UtcNow);
 
-                _logger.LogInformation($"User {user.ID} portfolio: ${totalValue:N2}");
+                await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
             }
-
-            await db.SaveChangesAsync();
-
-            // Run every hour
-            await Task.Delay(TimeSpan.FromHours(1), stoppingToken);
         }
     }
 }

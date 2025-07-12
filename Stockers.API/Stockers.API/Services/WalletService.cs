@@ -219,8 +219,8 @@ public class WalletService : IWalletService
             {
                 var latestPrice = await _context.AssetPriceHistory
                     .Where(ph => ph.AssetId == ua.AssetId)
-                    .OrderByDescending(ph => ph.Timestamp)
-                    .Select(ph => ph.Price)
+                    .OrderByDescending(ph => ph.Date)
+                    .Select(ph => ph.Close)
                     .FirstOrDefaultAsync();
 
                 total += latestPrice * ua.Quantity;
@@ -251,7 +251,7 @@ public class WalletService : IWalletService
     {
         var history = await _context.UserPortfolioValue
             .Where(pv => pv.UserId == userId)
-            .OrderBy(pv => pv.Timestamp)
+            .OrderBy(pv => pv.Date)
             .ToListAsync();
 
         result.Data = history;

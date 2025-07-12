@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
 using Stockers.API.Services.Interfaces;
+using Stockers.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
