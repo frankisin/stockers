@@ -244,26 +244,26 @@ public class WalletService : IWalletService
     }
 
     public async Task<ServiceViewResult<List<UserPortfolioValue>>> GetUserPortfolioHistoryAsync(int userId)
-{
-    var result = new ServiceViewResult<List<UserPortfolioValue>>();
-
-    try
     {
-        var history = await _context.UserPortfolioValue
-            .Where(pv => pv.UserId == userId)
-            .OrderBy(pv => pv.Date)
-            .ToListAsync();
+        var result = new ServiceViewResult<List<UserPortfolioValue>>();
 
-        result.Data = history;
-        result.Success = true;
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error fetching portfolio history for user {UserId}", userId);
-        result.Notifications.Add(NotificationType.Error, "Could not fetch portfolio history.");
-    }
+        try
+        {
+            var history = await _context.UserPortfolioValue
+                .Where(pv => pv.UserId == userId)
+                .OrderBy(pv => pv.Date)
+                .ToListAsync();
 
-    return result;
-}
+            result.Data = history;
+            result.Success = true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching portfolio history for user {UserId}", userId);
+            result.Notifications.Add(NotificationType.Error, "Could not fetch portfolio history.");
+        }
+
+        return result;
+    }
 
 }

@@ -128,8 +128,14 @@ namespace Stockers.API.Controllers
         {
             try
             {
-                var total = await _walletService.GetUserPortfolioValueAsync(userId);
-                return Ok(new { TotalValue = total });
+                var result = await _walletService.GetUserPortfolioValueAsync(userId);
+
+                if (!result.Success)
+                {
+                    return StatusCode(500, result.Message ?? "Failed to fetch portfolio value");
+                }
+
+                return Ok(result.Data); // Sends back just the number (e.g., 11342.00)
             }
             catch (Exception ex)
             {
@@ -137,6 +143,7 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, "Failed to fetch portfolio value");
             }
         }
+
 
 
 
