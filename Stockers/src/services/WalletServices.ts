@@ -40,8 +40,10 @@ export interface UserAsset {
     id: number;
     symbol: string;
     name: string;
+    latestPrice: number; 
   };
 }
+
 
 export interface AssetPricePoint {
   date: string;
@@ -113,6 +115,15 @@ export const WalletService = {
       throw error.response?.data?.message || 'Failed to fetch wallet';
     }
   },
+  getUserWalletComp: async (userId: number): Promise<UserAsset[]> => {
+  try {
+    const response = await api.get<{ Data: UserAsset[] }>(`/Wallet/${userId}`);
+    return response.data.Data; // ✅ extract .Data
+  } catch (error: any) {
+    throw error.response?.data?.message || 'Failed to fetch wallet';
+  }
+  },
+
 
   getUserWalletValue: async (userId: number): Promise<number> => {
     try {
