@@ -25,7 +25,7 @@ export default function Portfolio(): React.JSX.Element {
   const { user } = context;
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return;//rebuild
 
     const fetchData = async () => {
       try {
