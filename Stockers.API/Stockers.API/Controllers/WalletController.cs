@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Stockers.API.Helpers;
 using Stockers.API.Models;
@@ -13,8 +14,11 @@ namespace Stockers.API.Controllers
         private readonly IWalletService _walletService;
         private readonly ILogger<WalletController> _logger;
 
-        public WalletController(IWalletService walletService, ILogger<WalletController> logger)
+        private readonly DataContext _dataContext;
+
+        public WalletController(IWalletService walletService, ILogger<WalletController> logger, DataContext dataContext)
         {
+            _dataContext = dataContext;
             _walletService = walletService;
             _logger = logger;
         }
@@ -144,6 +148,25 @@ namespace Stockers.API.Controllers
             }
         }
 
+        [HttpGet("transactions/{userId}")]
+        public async Task<IActionResult> GetRecentTransactions(int userId, [FromQuery] int limit = 10)
+        {
+            try
+            {
+                var transactions = await _dataContext.Transactions
+                    .Where(t => t.UserId == userId)
+                    .OrderByDescending(t => t.Timestamp)
+                    .Take(limit)
+                    .ToListAsync();
+
+                return Ok(transactions);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching recent transactions");
+                return StatusCode(500, "Failed to fetch transactions");
+            }
+        }
 
 
 
