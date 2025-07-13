@@ -210,6 +210,7 @@ public class WalletService : IWalletService
         try
         {
             var userAssets = await _context.UserAssets
+                .Include(ua => ua.Asset) // <-- THIS IS CRUCIAL
                 .Where(ua => ua.UserId == userId)
                 .ToListAsync();
 
@@ -223,7 +224,10 @@ public class WalletService : IWalletService
                     .Select(ph => ph.Close)
                     .FirstOrDefaultAsync();
 
-                total += latestPrice * ua.Quantity;
+                if (latestPrice > 0)
+                {
+                    total += latestPrice * ua.Quantity;
+                }
             }
 
             return new ServiceViewResult<decimal>

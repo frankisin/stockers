@@ -156,6 +156,43 @@ namespace Stockers.API.Controllers
             }
         }
 
+        [HttpPost("history/save/{symbol}")]
+public async Task<IActionResult> SaveHistoryToDb(string symbol)
+{
+    if (string.IsNullOrWhiteSpace(symbol))
+        return BadRequest("Symbol is required");
+
+    try
+    {
+        var history = await _yahooService.GetOhlcHistoryAsync(symbol);
+
+        var asset = await _context.Assets.FirstOrDefaultAsync(a => a.Symbol == symbol.ToUpper());
+        if (asset == null)
+            return NotFound("Asset not found in DB");
+
+        foreach (var entry in history)
+        {
+            // Avoid duplicates
+            bool exists = await _context.AssetPriceHistory.AnyAsync(p =>
+                p.AssetId == asset.Id && p.Date == entry.Date);
+
+            if (!exists)
+            {
+                entry.AssetId = asset.Id;
+                _context.AssetPriceHistory.Add(entry);
+            }
+        }
+
+        await _context.SaveChangesAsync();
+
+        return Ok(new { Count = history.Count });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Error saving price history: {ex.Message}");
+    }
+}
+
     }
 
 }
