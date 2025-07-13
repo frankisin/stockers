@@ -41,7 +41,7 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
     if (!state.user?.ID) return;
     try {
       const response = await WalletService.getUserWalletValue(state.user.ID);
-      setBalance(response.TotalValue.Data ?? 0);
+      setBalance(response ?? 0);
     } catch (error) {
       logger.error('Failed to refresh balance:', error);
     }
