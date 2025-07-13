@@ -36,12 +36,13 @@ export interface Transaction {
   timestamp: string;
   type: 'buy' | 'sell';
 }
+
 export interface LatestOrdersProps {
-  orders?: Order[];
+  transactions?: Transaction[];
   sx?: SxProps;
 }
 
-export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.Element {
+export function RecentTransactions({ transactions = [], sx }: LatestOrdersProps): React.JSX.Element {
   return (
     <Card sx={sx}>
       <CardHeader title="Latest orders" />
@@ -57,21 +58,17 @@ export function LatestOrders({ orders = [], sx }: LatestOrdersProps): React.JSX.
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => {
-              const { label, color } = statusMap[order.status] ?? { label: 'Unknown', color: 'default' };
-
-              return (
-                <TableRow hover key={order.id}>
-                  <TableCell>{order.id}</TableCell>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{dayjs(order.createdAt).format('MMM D, YYYY')}</TableCell>
-                  <TableCell>
-                    <Chip color={color} label={label} size="small" />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {transactions.map((tx) => (
+              <TableRow hover key={tx.id}>
+                <TableCell>{tx.assetSymbol}</TableCell>
+                <TableCell>{tx.type === 'buy' ? 'Purchase' : 'Sale'}</TableCell>
+                <TableCell>{tx.quantity}</TableCell>
+                <TableCell>${tx.pricePerShare.toFixed(2)}</TableCell>
+                <TableCell>{dayjs(tx.timestamp).format('MMM D, YYYY')}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
+
         </Table>
       </Box>
       <Divider />

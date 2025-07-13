@@ -37,15 +37,20 @@ export function UserProvider({ children }: UserProviderProps): React.JSX.Element
 
   const [balance, setBalance] = useState<number | null>(null);
 
+  
+
   const refreshBalance = useCallback(async () => {
-    if (!state.user?.ID) return;
-    try {
-      const response = await WalletService.getUserWalletValue(state.user.ID);
-      setBalance(response ?? 0);
-    } catch (error) {
-      logger.error('Failed to refresh balance:', error);
-    }
-  }, [state.user?.ID]);
+  const userId = state.user?.ID;
+  if (typeof userId !== 'number') return;
+
+  try {
+    const response = await WalletService.getUserWalletValue(userId);
+    setBalance(response ?? 0);
+  } catch (error) {
+    logger.error('Failed to refresh balance:', error);
+  }
+}, [state.user?.ID]);
+
 
   // Fetch balance initially
   useEffect(() => {
