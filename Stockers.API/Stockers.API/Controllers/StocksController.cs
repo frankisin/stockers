@@ -81,29 +81,37 @@ namespace Stockers.API.Controllers
 
             try
             {
-                var chartData = await _yahooService.GetChartBatchAsync(symbols, range, interval);
-
                 var result = new Dictionary<string, List<object>>();
+                var symbolList = symbols.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
-                foreach (var kvp in chartData)
+                foreach (var symbol in symbolList)
                 {
-                    var symbol = kvp.Key;
-                    var data = kvp.Value;
+                    var chart = await _yahooService.GetChartAsync(symbol, range, interval);
+                    var item = chart?.chart?.result?.FirstOrDefault();
 
+                    if (item?.timestamp == null || item.indicators?.quote?.FirstOrDefault() == null)
+                        continue;
+
+                    var quote = item.indicators.quote.First();
                     var entries = new List<object>();
-                    for (int i = 0; i < data.Timestamp.Count; i++)
+
+                    for (int i = 0; i < item.timestamp.Count; i++)
                     {
+                        if (i >= quote.close.Count) continue;
+
                         entries.Add(new
                         {
-                            Timestamp = DateTimeOffset.FromUnixTimeSeconds(data.Timestamp[i]).UtcDateTime,
-                            Price = Math.Round(data.Close[i], 2)
+                            Timestamp = DateTimeOffset.FromUnixTimeSeconds(item.timestamp[i]).UtcDateTime,
+                            Price = Math.Round(quote.close[i] ?? 0, 2)
                         });
                     }
 
                     result[symbol] = entries;
                 }
-
                 return Ok(result);
+
+
+
             }
             catch (Exception ex)
             {
@@ -118,19 +126,24 @@ namespace Stockers.API.Controllers
 
             try
             {
-                // Reuse your existing batch method internally
-                var chartData = await _yahooService.GetChartBatchAsync(symbol, range, interval);
+                var chartData = await _yahooService.GetChartAsync(symbol, range, interval);
 
-                if (!chartData.TryGetValue(symbol, out var data) || data?.Timestamp == null)
+                var item = chartData?.chart?.result?.FirstOrDefault();
+                var quote = item?.indicators?.quote?.FirstOrDefault();
+                var timestamps = item?.timestamp;
+
+                if (quote == null || timestamps == null)
                     return NotFound($"No data found for symbol: {symbol}");
 
                 var entries = new List<object>();
-                for (int i = 0; i < data.Timestamp.Count; i++)
+                for (int i = 0; i < timestamps.Count; i++)
                 {
+                    if (i >= quote.close.Count) continue;
+
                     entries.Add(new
                     {
-                        Timestamp = DateTimeOffset.FromUnixTimeSeconds(data.Timestamp[i]).UtcDateTime,
-                        Price = Math.Round(data.Close[i], 2)
+                        Timestamp = DateTimeOffset.FromUnixTimeSeconds(timestamps[i]).UtcDateTime,
+                        Price = Math.Round(quote.close[i] ?? 0, 2)
                     });
                 }
 
@@ -142,6 +155,7 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, "Error fetching chart data");
             }
         }
+
     }
 
 }
