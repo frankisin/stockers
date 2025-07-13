@@ -18,17 +18,6 @@ namespace Stockers.API.Models
         public long? Volume { get; set; } // Optional
     }
 
-    public class YahooChartResponse : Dictionary<string, YahooChartData> { }
-
-    public class YahooChartData
-    {
-        public string Symbol { get; set; }
-        public List<long> Timestamp { get; set; } = new();
-        public List<decimal> Close { get; set; } = new();
-
-        public int DataGranularity { get; set; }
-        public decimal? PreviousClose { get; set; }
-        public decimal? ChartPreviousClose { get; set; }
-    }
+   
 
 }

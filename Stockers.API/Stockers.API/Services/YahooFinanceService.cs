@@ -82,16 +82,16 @@ public class YahooFinanceService
         return quoteMap;
     }
 
-    public async Task<YahooChartResponse?> GetChartBatchAsync(string symbolsCsv, string range = "1mo", string interval = "1d")
+    public async Task<YahooChartResult?> GetChartAsync(string symbol, string range = "1mo", string interval = "1d")
     {
-        var request = CreateRequest(HttpMethod.Get, $"/v8/finance/spark?symbols={Uri.EscapeDataString(symbolsCsv)}&range={range}&interval={interval}");
+        var request = CreateRequest(HttpMethod.Get, $"/v8/finance/chart/{Uri.EscapeDataString(symbol)}?range={range}&interval={interval}");
 
         var response = await _httpClient.SendAsync(request);
         response.EnsureSuccessStatusCode();
 
         var content = await response.Content.ReadAsStringAsync();
 
-        return JsonSerializer.Deserialize<YahooChartResponse>(content, new JsonSerializerOptions
+        return JsonSerializer.Deserialize<YahooChartResult>(content, new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
@@ -100,35 +100,36 @@ public class YahooFinanceService
     // Final version of OHLC generator using latest quote
     public async Task<List<AssetPriceHistory>> GetOhlcHistoryAsync(string symbol)
     {
-        var chart = await GetChartBatchAsync(symbol);
+        var chart = await GetChartAsync(symbol);
 
-        if (chart == null || !chart.TryGetValue(symbol, out var data))
-            return new List<AssetPriceHistory>();
+        var item = chart?.chart?.result?.FirstOrDefault();
+        var timestamps = item?.timestamp;
+        var quote = item?.indicators?.quote?.FirstOrDefault();
 
-        var prices = data.Close;
-        var timestamps = data.Timestamp;
-
-        if (prices == null || prices.Count == 0 || timestamps == null || timestamps.Count != prices.Count)
+        if (timestamps == null || quote == null)
             return new List<AssetPriceHistory>();
 
         var history = new List<AssetPriceHistory>();
 
-        for (int i = 0; i < prices.Count; i++)
+        for (int i = 0; i < timestamps.Count; i++)
         {
+            // Defensive check: all lists should be same length, but just in case
+            if (i >= quote.open.Count || i >= quote.close.Count || i >= quote.high.Count || i >= quote.low.Count)
+                continue;
+
             var date = DateTimeOffset.FromUnixTimeSeconds(timestamps[i]).UtcDateTime.Date;
 
-            // Skip duplicates (we'll check this again in your updater anyway)
             if (history.Any(h => h.Date == date))
                 continue;
 
             history.Add(new AssetPriceHistory
             {
                 Date = date,
-                Open = prices[i],  // In spark API this is just "Close", no OHLC unless you switch to /chart
-                Close = prices[i],
-                High = prices[i],
-                Low = prices[i],
-                Volume = null
+                Open = quote.open[i] ?? 0,
+                High = quote.high[i] ?? 0,
+                Low = quote.low[i] ?? 0,
+                Close = quote.close[i] ?? 0,
+                Volume = quote.volume[i]
             });
         }
 
