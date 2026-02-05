@@ -28,6 +28,7 @@ export function PortfolioAllocation({
   const theme = useTheme();
 
   const chartData = React.useMemo(() => {
+    console.log('Assets injected into component: ',assets);
     const totalValue = assets.reduce((sum, a) => sum + a.quantity * a.latestPrice, 0);
     const values = assets.map((a) => parseFloat(((a.quantity * a.latestPrice * 100) / totalValue).toFixed(2)));
     const labels = assets.map((a) => a.assetSymbol);

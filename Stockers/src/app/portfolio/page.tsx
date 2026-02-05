@@ -35,13 +35,13 @@ export default function Portfolio(): React.JSX.Element {
       const [assets, txns, wallet] = await Promise.all([
         WalletService.getSupportedAssets(),
         WalletService.getUserTransactions(Number(user.ID), 10),
-        WalletService.getUserWallet(Number(user.ID)),
+        WalletService.getUserWalletComp(Number(user.ID)),
 
       ]);
       setSupportedAssets(assets);
       setTransactions(txns);
       setWalletAssets(Array.isArray(wallet) ? wallet : []);
-      console.log('Fetched Wallet Assets:', wallet); // 👈 sanity check
+      
 
     } catch (err) {
       console.error('Error fetching data:', err);
@@ -92,12 +92,15 @@ export default function Portfolio(): React.JSX.Element {
           {/* Portfolio Allocation */}
           <Grid size={{ lg: 4, md: 6, xs: 12 }}>
             <PortfolioAllocation
-              assets={walletAssets.map((item) => ({
-                assetSymbol: item.asset.symbol,
-                quantity: item.quantity,
-                latestPrice: item.asset.latestPrice ?? 0,
-              }))}
+              assets={walletAssets
+                .filter((item) => item.asset != null)
+                .map((item) => ({
+                  assetSymbol: item.asset.symbol,
+                  quantity: item.quantity,
+                  latestPrice: item.asset.latestPrice ?? 0,
+                }))}
             />
+
           </Grid>
 
 
@@ -134,5 +137,5 @@ interface UserAsset {
     symbol: string;
     name: string;
     latestPrice: number;
-  };
+  } | null;
 }
