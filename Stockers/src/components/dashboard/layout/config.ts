@@ -3,8 +3,8 @@ import { paths } from '../../../paths';
 
 export const navItems = [
   { key: 'customers', title: 'Submit Evidence', href: paths.dashboard.customers, icon: 'plugs-connected' },
-  { key: 'settings', title: 'Settings', href: paths.dashboard.settings, icon: 'gear-six' },
-  { key: 'account', title: 'Account', href: paths.dashboard.account, icon: 'user' }
+  { key: 'account', title: 'Account', href: paths.dashboard.account, icon: 'user' },
+  { key: 'settings', title: 'Settings', href: paths.dashboard.settings, icon: 'gear-six' }
 ] satisfies NavItemConfig[];
 /*
 export const navItems = [
