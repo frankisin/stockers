@@ -10,7 +10,7 @@ function Home() {
         <div className="masthead-content">
           <div className="container px-5">
             <h1 className="masthead-subheading mb-0">Welcome to</h1>
-            <h1 className="masthead-heading mb-0">Stockers</h1>
+            <h1 className="masthead-heading mb-0">IntelliSight</h1>
             <a className="btn btn-primary btn-xl rounded-pill mt-5" href="/register">Jump In</a>
             <p style={{ position: 'relative', bottom: '-7rem' }}>Brought to you by Frank Velazquez.</p>
           </div>
