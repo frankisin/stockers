@@ -14,6 +14,7 @@ const userDefault = {
   avatar: '/assets/avatar.png',
   country: 'USA',
   city: 'Los Angeles',
+  state: 'California',
   timezone: 'GMT-7',
 } as const;
 
@@ -59,7 +60,7 @@ export function AccountInfo(): React.JSX.Element {
             </Typography>
 
             <Typography color="text.secondary" variant="body2">
-              {user?.city || userDefault.city}{' '}
+              {user?.city || userDefault.city}{' , '}{user?.state || userDefault.state}
               {user?.country || userDefault.country}
             </Typography>
 
