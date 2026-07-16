@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Stockers.API.Services.Interfaces;
 
 namespace Stockers.API.Controllers
 {
@@ -23,12 +24,14 @@ namespace Stockers.API.Controllers
         private readonly DataContext _context;
         private readonly TokenService _tokenService;
         private readonly JwtConfig _jwtConfig;
+        private readonly IUserProfileService _userProfileService;
 
-        public AuthController(DataContext context, TokenService tokenService, IOptions<JwtConfig> jwtConfig)
+        public AuthController(DataContext context, TokenService tokenService, IOptions<JwtConfig> jwtConfig, IUserProfileService userProfileService)
         {
             _context = context;
             _tokenService = tokenService;
             _jwtConfig = jwtConfig.Value;
+            _userProfileService = userProfileService;
         }
 
         [HttpPost("login")]
@@ -116,6 +119,7 @@ namespace Stockers.API.Controllers
                     user.zipCode,
                     user.phoneNumber,
                     user.Role,
+                    user.profileImageUrl,
                     user.userBalance
                 });
             }
@@ -150,7 +154,32 @@ namespace Stockers.API.Controllers
                 return Ok(new { valid = false });
             }
         }
+        [HttpPost("profile/image")]
+        [Authorize]
+        public async Task<IActionResult> UploadProfileImage([FromForm] IFormFile file)
+        {
+            var userIdClaim = User.FindFirst("UserID");
 
+            if (
+                userIdClaim == null ||
+                !int.TryParse(userIdClaim.Value, out var userId)
+            )
+            {
+                return Unauthorized();
+            }
+
+            var result = await _userProfileService.UploadProfileImageAsync(
+                userId,
+                file
+            );
+
+            if (!result.Success)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
         public class TokenModel
         {
             public string Token { get; set; }

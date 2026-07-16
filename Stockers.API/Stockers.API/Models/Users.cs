@@ -43,7 +43,7 @@ namespace Stockers.API.Models
 
     [Required]
     public decimal userBalance { get; set; }
-
+    public string? profileImageUrl { get; set; }
     public ICollection<UserAssets> UserAssets { get; set; }
 
     public ICollection<UserPortfolioValue> PortfolioHistory { get; set; }

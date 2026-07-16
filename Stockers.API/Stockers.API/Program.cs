@@ -44,6 +44,9 @@ builder.Services.AddHostedService<UserPortfolioValuator>();
 //wallet service..
 builder.Services.AddScoped<IWalletService, WalletService>();
 
+//Profile service 
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+
 
 // JWT authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -94,7 +97,7 @@ app.Use(async (context, next) =>
 
     await next();
 });
-
+app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseDeveloperExceptionPage(); // only in development

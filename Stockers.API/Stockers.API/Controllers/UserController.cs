@@ -63,8 +63,6 @@ namespace Stockers.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
         [HttpGet("{ID}")]
         public async Task<ActionResult<Users>> GetUser(int ID)
         {
@@ -183,7 +181,6 @@ namespace Stockers.API.Controllers
                 UpdatedData = existingUser
             });
         }
-
 
         // Helper function to check if a user is present..
         private bool UserExists(int id)

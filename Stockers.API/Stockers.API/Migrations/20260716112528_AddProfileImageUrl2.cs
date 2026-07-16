@@ -5,7 +5,7 @@
 namespace Stockers.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddStateAndPhoneNumber : Migration
+    public partial class AddProfileImageUrl2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,13 +16,7 @@ namespace Stockers.API.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "phoneNumber",
-                table: "users");
 
-            migrationBuilder.DropColumn(
-                name: "state",
-                table: "users");
         }
     }
 }
