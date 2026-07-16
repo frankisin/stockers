@@ -65,7 +65,7 @@ export function SecondaryNav(): React.JSX.Element {
               }}
               onClick={() => (window.location.href = '/')}
             >
-              Stockers
+              IntelliSight
             </Typography>
 
             <Tooltip title="Search">

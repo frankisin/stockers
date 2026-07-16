@@ -57,7 +57,7 @@ export function SecondarySideNav({ open, onClose }: SecondarySideNavProps): Reac
           sx={{ display: 'inline-flex', alignItems: 'baseline', cursor: 'pointer' }}
         >
           <Typography color="inherit" variant="h5" sx={{ fontWeight: 700 }}>
-            Stockers
+            IntelliSight
           </Typography>
         </Box>
       </Stack>

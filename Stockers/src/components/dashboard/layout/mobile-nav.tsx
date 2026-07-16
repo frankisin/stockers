@@ -65,7 +65,7 @@ export function MobileNav({ open, onClose }: MobileNavProps): React.JSX.Element 
           sx={{ display: 'inline-flex', alignItems: 'baseline', cursor: 'pointer' }}
         >
           <Typography color="inherit" variant="h4" sx={{ fontWeight: 700 }}>
-            Stockers
+            IntelliSight
           </Typography>
           <Typography
             color="inherit"
