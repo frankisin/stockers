@@ -536,6 +536,10 @@ namespace Stockers.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("country")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("text");

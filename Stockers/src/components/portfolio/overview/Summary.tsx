@@ -23,10 +23,7 @@ export function Summary({ sx }: SummaryProps): React.JSX.Element {
   const { user } = useUserContext();
 
   console.log('User from context:', user);
-
-
-
-
+  
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { balance, refreshBalance } = useUserContext();
 
