@@ -120,7 +120,8 @@ namespace Stockers.API.Controllers
                     user.phoneNumber,
                     user.Role,
                     user.profileImageUrl,
-                    user.userBalance
+                    user.userBalance,
+                    user.country
                 });
             }
             catch (Exception ex)
