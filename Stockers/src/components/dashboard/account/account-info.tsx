@@ -60,12 +60,10 @@ export function AccountInfo(): React.JSX.Element {
             </Typography>
 
             <Typography color="text.secondary" variant="body2">
-              {user?.city || userDefault.city}{' , '}{user?.state || userDefault.state}
-              {user?.country || userDefault.country}
+              {user?.city || userDefault.city}{' ,'}{user?.state || userDefault.state}
             </Typography>
-
             <Typography color="text.secondary" variant="body2">
-              {userDefault.timezone}
+              {user?.country || userDefault.country}
             </Typography>
           </Stack>
         </Stack>
