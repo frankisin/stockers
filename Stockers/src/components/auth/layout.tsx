@@ -76,7 +76,7 @@ const Layout = ({ children }: LayoutProps): React.JSX.Element => {
                 textShadow: '0 1px 4px rgba(0,0,0,0.4)',
               }}
             >
-              Welcome to Stockers
+              Welcome to IntelliSight
             </Typography>
             <Typography
               variant="subtitle1"
