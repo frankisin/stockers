@@ -13,11 +13,5 @@ namespace Stockers.API.Services.Interfaces
         Task<ServiceViewResult<List<UserAssets>>> GetUserWalletAsync(int userId);
 
         Task<ServiceViewResult<decimal>> GetUserPortfolioValueAsync(int userId);
-
-
-
-      
-
 }
-
 }
