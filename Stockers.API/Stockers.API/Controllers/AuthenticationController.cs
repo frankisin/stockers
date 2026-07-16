@@ -112,7 +112,9 @@ namespace Stockers.API.Controllers
                     user.email,
                     user.streetAddress,
                     user.city,
+                    user.state,
                     user.zipCode,
+                    user.phoneNumber,
                     user.Role,
                     user.userBalance
                 });
