@@ -53,7 +53,7 @@ namespace Stockers.API.Models
 
     public Users() { }
 
-    public Users(string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string phoneNumber, string email, string username, string password, string Role, decimal userBalance)
+    public Users(string firstName, string lastName, string streetAddress, string city, string state, string zipCode, string phoneNumber, string profileImageUrl, string email, string username, string password, string Role, decimal userBalance)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -67,6 +67,7 @@ namespace Stockers.API.Models
         this.userBalance = userBalance;
         this.state = state;
         this.phoneNumber = phoneNumber;
+        this.profileImageUrl = profileImageUrl;
     }
 }
 
