@@ -13,6 +13,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
+import { useUserContext } from '../../../contexts/user-context';
 
 const states = [
   { value: 'alabama', label: 'Alabama' },
@@ -21,7 +22,10 @@ const states = [
   { value: 'los-angeles', label: 'Los Angeles' },
 ] as const;
 
+
+
 export function AccountDetailsForm(): React.JSX.Element {
+  const { user, isLoading } = useUserContext();
   return (
     <form
       onSubmit={(event) => {
@@ -41,7 +45,7 @@ export function AccountDetailsForm(): React.JSX.Element {
             >
               <FormControl fullWidth required>
                 <InputLabel>First name</InputLabel>
-                <OutlinedInput defaultValue="Sofia" label="First name" name="firstName" />
+                <OutlinedInput defaultValue={user?.firstName ?? ''} label="First name" name="firstName" />
               </FormControl>
             </Grid>
             <Grid
@@ -52,7 +56,7 @@ export function AccountDetailsForm(): React.JSX.Element {
             >
               <FormControl fullWidth required>
                 <InputLabel>Last name</InputLabel>
-                <OutlinedInput defaultValue="Rivers" label="Last name" name="lastName" />
+                <OutlinedInput defaultValue={user?.lastName ?? ''} label="Last name" name="lastName" />
               </FormControl>
             </Grid>
             <Grid
@@ -63,7 +67,7 @@ export function AccountDetailsForm(): React.JSX.Element {
             >
               <FormControl fullWidth required>
                 <InputLabel>Email address</InputLabel>
-                <OutlinedInput defaultValue="sofia@devias.io" label="Email address" name="email" />
+                <OutlinedInput defaultValue={user?.email ?? ''} label="Email address" name="email" />
               </FormControl>
             </Grid>
             <Grid

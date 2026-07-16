@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useUserContext } from '../../../contexts/user-context';
 
-const { user, isLoading } = useUserContext();
+
 
 const userDefault = {
   name: 'Sofia Rivers',
@@ -21,6 +21,7 @@ const userDefault = {
 } as const;
 
 export function AccountInfo(): React.JSX.Element {
+  const { user, isLoading } = useUserContext();
   return (
     <Card>
       <CardContent>
