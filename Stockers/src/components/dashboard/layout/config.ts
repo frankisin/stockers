@@ -2,6 +2,10 @@ import type { NavItemConfig } from '../../../types/nav';
 import { paths } from '../../../paths';
 
 export const navItems = [
+  { key: 'customers', title: 'Submit Evidence', href: paths.dashboard.customers, icon: 'plugs-connected' },
+] satisfies NavItemConfig[];
+/*
+export const navItems = [
   { key: 'overview', title: 'Overview', href: paths.dashboard.overview, icon: 'chart-pie' },
   { key: 'portfolio', title: 'My Portfolio', href: paths.portfolio, icon: 'users' },
   { key: 'customers', title: 'Customers', href: paths.dashboard.customers, icon: 'plugs-connected' },
@@ -9,3 +13,4 @@ export const navItems = [
   { key: 'account', title: 'Account', href: paths.dashboard.account, icon: 'user' },
   { key: 'error', title: 'Error', href: paths.errors.notFound, icon: 'x-square' },
 ] satisfies NavItemConfig[];
+ */

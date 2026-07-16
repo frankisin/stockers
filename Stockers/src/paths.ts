@@ -8,6 +8,7 @@ export const paths = {
     portfolio: '/portfolio',
     customers: '/customers',
     settings: '/settings',
+    analysis: '/analysis'
   },
   errors: { notFound: '/errors/not-found' },
 } as const;
