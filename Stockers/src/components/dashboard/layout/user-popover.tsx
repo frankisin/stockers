@@ -66,10 +66,7 @@ export function UserPopover({ anchorEl, onClose, open }: UserPopoverProps): Reac
         <Typography variant="subtitle1">
         {(user?.firstName || '') + ' ' + (user?.lastName || '')}
       </Typography>
-
       <Typography variant="body2">{user?.email || user?.username || 'Unknown User'}</Typography>
-
-
       </Box>
       <Divider />
       <MenuList disablePadding sx={{ p: '8px', '& .MuiMenuItem-root': { borderRadius: 1 } }}>

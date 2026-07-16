@@ -106,7 +106,7 @@ export function AccountDetailsForm(): React.JSX.Element {
             >
               <FormControl fullWidth>
                 <InputLabel>City</InputLabel>
-                <OutlinedInput label="City" />
+                <OutlinedInput defaultValue={user?.city ?? ''} label="City" name="city"/>
               </FormControl>
             </Grid>
           </Grid>
