@@ -5,14 +5,15 @@ export const AuthService = {
     try {
       const response = await api.post('/auth/login', {
         username,
-        password
+        password,
       });
-      console.log('Results: ',response.data);
-      return response.data; 
+
+      return response.data;
     } catch (error) {
       throw error.response?.data?.message || 'Login failed';
     }
   },
+
   getProfile: async () => {
     const token = localStorage.getItem('token');
 
@@ -26,13 +27,30 @@ export const AuthService = {
 
     return response.data;
   },
-  signUp : async (user) => {
-    try{
-      const response = await api.post('/User',user);
+
+  uploadProfileImage: async (file) => {
+    const token = localStorage.getItem('token');
+
+    if (!token) throw new Error('No token found');
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await api.post('/auth/profile/image', formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  },
+
+  signUp: async (user) => {
+    try {
+      const response = await api.post('/User', user);
       return response.data;
-    }
-    catch(error){
+    } catch (error) {
       throw error.response?.data?.message || 'Sign up failed';
     }
-  }
+  },
 };

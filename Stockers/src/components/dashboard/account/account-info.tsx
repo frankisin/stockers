@@ -9,6 +9,7 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { useUserContext } from '../../../contexts/user-context';
+import { AuthService } from '../../../services/AuthServices';
 
 const userDefault = {
   avatar: '/assets/avatar.png',
@@ -25,20 +26,28 @@ export function AccountInfo(): React.JSX.Element {
   const handleUploadClick = (): void => {
     fileInputRef.current?.click();
   };
-
-  const handleFileChange = (
+  //handler for file uploader
+  const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
+  ): Promise<void> => {
     const file = event.target.files?.[0];
 
     if (!file) {
       return;
     }
 
-    console.log('Selected file:', file);
+    try {
+      console.log('Selected file:', file);
 
-    // Next step:
-    // create FormData and send it to POST /auth/profile/image
+      const result = await AuthService.uploadProfileImage(file);
+
+      console.log('Upload successful:', result);
+
+      // Next step:
+      // Refresh the user context so the new avatar appears immediately.
+    } catch (error) {
+      console.error('Image upload failed:', error);
+    }
   };
 
   if (isLoading) {
