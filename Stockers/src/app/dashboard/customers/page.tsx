@@ -18,6 +18,8 @@ import { CaretDownIcon } from '@phosphor-icons/react/dist/ssr/CaretDown';
 import { CustomersFilters } from '../../../components/dashboard/customer/customers-filters';
 import { CustomersTable } from '../../../components/dashboard/customer/customers-table';
 import type { Customer } from '../../../components/dashboard/customer/customers-table';
+import { analyzeMessage } from '../../../services/AIService';
+
 import Layout from '../layout';
 
 const customers = [
@@ -194,19 +196,19 @@ export default function Customers(): React.JSX.Element {
     setSelectedFile(file);
   };
   React.useEffect(() => {
-  const previousScrollRestoration = window.history.scrollRestoration;
+    const previousScrollRestoration = window.history.scrollRestoration;
 
-  window.history.scrollRestoration = 'manual';
+    window.history.scrollRestoration = 'manual';
 
-  const frame = window.requestAnimationFrame(() => {
-    window.scrollTo(0, 0);
-  });
+    const frame = window.requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+    });
 
-  return () => {
-    window.cancelAnimationFrame(frame);
-    window.history.scrollRestoration = previousScrollRestoration;
-  };
-}, []);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
 
   const handleAnalyze = async (): Promise<void> => {
     if (!canSubmit || isAnalyzing) {
@@ -216,13 +218,11 @@ export default function Customers(): React.JSX.Element {
     try {
       setIsAnalyzing(true);
 
-      // Replace this with your API request.
-      console.log({
-        report,
-        selectedFile,
+      const result = await analyzeMessage({
+        message: report,
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log('AI response:', result.response);
     } catch (error) {
       console.error('Unable to analyze report:', error);
     } finally {
@@ -231,28 +231,28 @@ export default function Customers(): React.JSX.Element {
   };
 
   React.useEffect(() => {
-  const triggerElement = reportsTriggerRef.current;
+    const triggerElement = reportsTriggerRef.current;
 
-  if (!triggerElement) {
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (entry.isIntersecting) {
-        setShowReports(true);
-        observer.disconnect();
-      }
-    },
-    {
-      threshold: 0.1,
+    if (!triggerElement) {
+      return;
     }
-  );
 
-  observer.observe(triggerElement);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowReports(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.1,
+      }
+    );
 
-  return () => observer.disconnect();
-}, []);
+    observer.observe(triggerElement);
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>
@@ -307,7 +307,7 @@ export default function Customers(): React.JSX.Element {
                   letterSpacing: '-0.03em',
                 }}
               >
-                Have something to report?
+                Ready when you are.
               </Typography>
 
               <Typography color="text.secondary" variant="body1">

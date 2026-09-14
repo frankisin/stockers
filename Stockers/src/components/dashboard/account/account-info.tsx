@@ -20,13 +20,19 @@ const userDefault = {
 } as const;
 
 export function AccountInfo(): React.JSX.Element {
-  const { user, isLoading } = useUserContext();
+  const { user, isLoading, checkSession } = useUserContext();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '');
+
+  const profileImageSrc = user?.profileImageUrl
+    ? `${apiBaseUrl}${user.profileImageUrl}`
+    : userDefault.avatar;
 
   const handleUploadClick = (): void => {
     fileInputRef.current?.click();
   };
-  //handler for file uploader
+
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ): Promise<void> => {
@@ -43,10 +49,11 @@ export function AccountInfo(): React.JSX.Element {
 
       console.log('Upload successful:', result);
 
-      // Next step:
-      // Refresh the user context so the new avatar appears immediately.
+      await checkSession();
     } catch (error) {
       console.error('Image upload failed:', error);
+    } finally {
+      event.target.value = '';
     }
   };
 
@@ -59,7 +66,8 @@ export function AccountInfo(): React.JSX.Element {
       <CardContent>
         <Stack spacing={2} sx={{ alignItems: 'center' }}>
           <Avatar
-            src={user?.profileImageUrl || userDefault.avatar}
+            src={profileImageSrc}
+            alt={user?.username ?? 'Profile picture'}
             sx={{ height: '80px', width: '80px' }}
           />
 
@@ -69,8 +77,11 @@ export function AccountInfo(): React.JSX.Element {
             </Typography>
 
             <Typography color="text.secondary" variant="body2">
-              {user?.city || userDefault.city}{', '}{user?.state || userDefault.state}
+              {user?.city || userDefault.city}
+              {', '}
+              {user?.state || userDefault.state}
             </Typography>
+
             <Typography color="text.secondary" variant="body2">
               {user?.country || userDefault.country}
             </Typography>
@@ -89,11 +100,7 @@ export function AccountInfo(): React.JSX.Element {
           onChange={handleFileChange}
         />
 
-        <Button
-          fullWidth
-          variant="text"
-          onClick={handleUploadClick}
-        >
+        <Button fullWidth variant="text" onClick={handleUploadClick}>
           Upload picture
         </Button>
       </CardActions>
