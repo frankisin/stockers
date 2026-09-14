@@ -349,7 +349,8 @@ export default function Customers(): React.JSX.Element {
                   key={index}
                   sx={{
                     display: 'flex',
-                    justifyContent:
+                    flexDirection: 'column',
+                    alignItems:
                       message.role === 'user' ? 'flex-end' : 'flex-start',
                   }}
                 >
@@ -379,8 +380,6 @@ export default function Customers(): React.JSX.Element {
                         '& p:last-child': {
                           marginBottom: 0,
                         },
-
-                        // Markdown headings
                         '& h1': {
                           fontSize: '1.35rem',
                           fontWeight: 700,
@@ -406,6 +405,7 @@ export default function Customers(): React.JSX.Element {
                       </ReactMarkdown>
                     </Box>
                   </Paper>
+
                   <Typography
                     variant="caption"
                     color="text.secondary"
