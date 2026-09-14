@@ -22,6 +22,11 @@ import { analyzeMessage } from '../../../services/AIService';
 
 import Layout from '../layout';
 
+type ChatMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+};
+
 const customers = [
   {
     id: 'USR-010',
@@ -178,6 +183,7 @@ export default function Customers(): React.JSX.Element {
   const reportsTriggerRef = React.useRef<HTMLDivElement>(null);
   const reportsRef = React.useRef<HTMLDivElement>(null);
 
+  const [messages, setMessages] = React.useState<ChatMessage[]>([]);
 
 
 
@@ -211,18 +217,36 @@ export default function Customers(): React.JSX.Element {
   }, []);
 
   const handleAnalyze = async (): Promise<void> => {
-    if (!canSubmit || isAnalyzing) {
+    const userMessage = report.trim();
+
+    if (!userMessage || isAnalyzing) {
       return;
     }
 
     try {
       setIsAnalyzing(true);
 
+      setMessages((previous) => [
+        ...previous,
+        {
+          role: 'user',
+          content: userMessage,
+        },
+      ]);
+
+      setReport('');
+
       const result = await analyzeMessage({
-        message: report,
+        message: userMessage,
       });
 
-      console.log('AI response:', result.response);
+      setMessages((previous) => [
+        ...previous,
+        {
+          role: 'assistant',
+          content: result.response,
+        },
+      ]);
     } catch (error) {
       console.error('Unable to analyze report:', error);
     } finally {
@@ -298,6 +322,7 @@ export default function Customers(): React.JSX.Element {
               width: '100%',
             }}
           >
+            {messages.length === 0 && (
             <Stack spacing={6} sx={{ textAlign: 'center' }}>
               <Typography
                 component="h1"
@@ -311,9 +336,45 @@ export default function Customers(): React.JSX.Element {
               </Typography>
 
               <Typography color="text.secondary" variant="body1">
-                Paste a suspicious email, describe what happened, or upload a
-                screenshot for IntelliSight to analyze.
+                Ask a question, share something you'd like analyzed, or upload an image to get started.
               </Typography>
+            </Stack>)}
+            <Stack spacing={2}>
+              {messages.map((message, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    display: 'flex',
+                    justifyContent:
+                      message.role === 'user' ? 'flex-end' : 'flex-start',
+                  }}
+                >
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      px: 2,
+                      py: 1.5,
+                      maxWidth: '75%',
+                      borderRadius: 3,
+                      bgcolor:
+                        message.role === 'user'
+                          ? 'primary.main'
+                          : 'action.hover',
+                      color:
+                        message.role === 'user'
+                          ? 'primary.contrastText'
+                          : 'text.primary',
+                    }}
+                  >
+                    <Typography
+                      variant="body1"
+                      sx={{ whiteSpace: 'pre-wrap' }}
+                    >
+                      {message.content}
+                    </Typography>
+                  </Paper>
+                </Box>
+              ))}
             </Stack>
             <Grow in timeout={500}>
               <Paper
@@ -340,7 +401,7 @@ export default function Customers(): React.JSX.Element {
                   value={report}
                   onChange={(event) => setReport(event.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Paste the suspicious email or describe the message..."
+                  placeholder="Ask IntelliSight anything..."
                   variant="standard"
                   slotProps={{
                     input: {
@@ -414,7 +475,7 @@ export default function Customers(): React.JSX.Element {
                       minWidth: 112,
                     }}
                   >
-                    {isAnalyzing ? 'Analyzing' : 'Analyze'}
+                    {isAnalyzing ? 'Sending' : 'Send'}
                   </Button>
                 </Stack>
               </Paper>
