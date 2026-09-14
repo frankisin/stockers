@@ -26,6 +26,7 @@ import ReactMarkdown from 'react-markdown';
 type ChatMessage = {
   role: 'user' | 'assistant';
   content: string;
+  timestamp: Date;
 };
 
 const customers = [
@@ -232,6 +233,7 @@ export default function Customers(): React.JSX.Element {
         {
           role: 'user',
           content: userMessage,
+          timestamp: new Date(),
         },
       ]);
 
@@ -246,6 +248,7 @@ export default function Customers(): React.JSX.Element {
         {
           role: 'assistant',
           content: result.response,
+          timestamp: new Date(),
         },
       ]);
     } catch (error) {
@@ -403,6 +406,20 @@ export default function Customers(): React.JSX.Element {
                       </ReactMarkdown>
                     </Box>
                   </Paper>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{
+                      mt: 0.5,
+                      px: 1,
+                      fontSize: '0.7rem',
+                    }}
+                  >
+                    {message.timestamp.toLocaleTimeString([], {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                    })}
+                  </Typography>
                 </Box>
               ))}
             </Stack>
