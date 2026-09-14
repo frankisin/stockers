@@ -381,19 +381,19 @@ export default function Customers(): React.JSX.Element {
                           marginBottom: 0,
                         },
                         '& h1': {
-                          fontSize: '1.35rem',
-                          fontWeight: 700,
-                          marginTop: 2,
-                          marginBottom: 1,
-                        },
-                        '& h2': {
                           fontSize: '1.2rem',
                           fontWeight: 700,
                           marginTop: 2,
                           marginBottom: 1,
                         },
-                        '& h3': {
+                        '& h2': {
                           fontSize: '1.1rem',
+                          fontWeight: 700,
+                          marginTop: 2,
+                          marginBottom: 1,
+                        },
+                        '& h3': {
+                          fontSize: '1rem',
                           fontWeight: 700,
                           marginTop: 1.5,
                           marginBottom: 0.75,
