@@ -21,6 +21,7 @@ import type { Customer } from '../../../components/dashboard/customer/customers-
 import { analyzeMessage } from '../../../services/AIService';
 
 import Layout from '../layout';
+import ReactMarkdown from 'react-markdown';
 
 type ChatMessage = {
   role: 'user' | 'assistant';
@@ -323,22 +324,22 @@ export default function Customers(): React.JSX.Element {
             }}
           >
             {messages.length === 0 && (
-            <Stack spacing={6} sx={{ textAlign: 'center' }}>
-              <Typography
-                component="h1"
-                variant="h3"
-                sx={{
-                  fontWeight: 700,
-                  letterSpacing: '-0.03em',
-                }}
-              >
-                Ready when you are.
-              </Typography>
+              <Stack spacing={6} sx={{ textAlign: 'center' }}>
+                <Typography
+                  component="h1"
+                  variant="h3"
+                  sx={{
+                    fontWeight: 700,
+                    letterSpacing: '-0.03em',
+                  }}
+                >
+                  Ready when you are.
+                </Typography>
 
-              <Typography color="text.secondary" variant="body1">
-                Ask a question, share something you'd like analyzed, or upload an image to get started.
-              </Typography>
-            </Stack>)}
+                <Typography color="text.secondary" variant="body1">
+                  Ask a question, share something you'd like analyzed, or upload an image to get started.
+                </Typography>
+              </Stack>)}
             <Stack spacing={2}>
               {messages.map((message, index) => (
                 <Box
@@ -366,12 +367,21 @@ export default function Customers(): React.JSX.Element {
                           : 'text.primary',
                     }}
                   >
-                    <Typography
-                      variant="body1"
-                      sx={{ whiteSpace: 'pre-wrap' }}
+                    <Box
+                      sx={{
+                        '& p': {
+                          margin: 0,
+                          marginBottom: 1.5,
+                        },
+                        '& p:last-child': {
+                          marginBottom: 0,
+                        },
+                      }}
                     >
-                      {message.content}
-                    </Typography>
+                      <ReactMarkdown>
+                        {message.content}
+                      </ReactMarkdown>
+                    </Box>
                   </Paper>
                 </Box>
               ))}
