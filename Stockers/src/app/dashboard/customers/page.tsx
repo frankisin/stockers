@@ -376,6 +376,26 @@ export default function Customers(): React.JSX.Element {
                         '& p:last-child': {
                           marginBottom: 0,
                         },
+
+                        // Markdown headings
+                        '& h1': {
+                          fontSize: '1.35rem',
+                          fontWeight: 700,
+                          marginTop: 2,
+                          marginBottom: 1,
+                        },
+                        '& h2': {
+                          fontSize: '1.2rem',
+                          fontWeight: 700,
+                          marginTop: 2,
+                          marginBottom: 1,
+                        },
+                        '& h3': {
+                          fontSize: '1.1rem',
+                          fontWeight: 700,
+                          marginTop: 1.5,
+                          marginBottom: 0.75,
+                        },
                       }}
                     >
                       <ReactMarkdown>
